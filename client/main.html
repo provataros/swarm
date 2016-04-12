@@ -1,0 +1,57 @@
+<head>
+  <title>simple</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+  <button id="hardReset">HARD</button>
+  {{#if currentUser}}
+    {{> view1}}
+  {{else}}
+    {{> login}}
+  {{/if}}
+</body>
+
+<template name="view1">
+  {{> showUpgrades}}
+  {{> showStructures}}
+</template>
+
+<template name="login">
+  <input type="text" id = "uid">
+  <input type="text" id = "pwd">
+  <button>Login</button>
+</template>
+
+<template name="showUpgrades">
+  {{#each upgrades}}
+    {{> upgrade}}
+  {{/each}}
+</template>
+
+<template name="showStructures">
+  {{#each structures}}
+    {{> structure}}
+  {{/each}}
+</template>
+
+<template name="structure">
+  <div class="container">
+    {{name}}
+    {{> showUnits}}
+  </div>
+</template>
+
+<template name="showUnits">
+  {{#each units}}
+    {{> unit}}
+  {{/each}}
+</template>
+
+<template name="unit">
+  <button class="create create_{{name}}">{{name}}</button>
+</template>
+
+<template name="upgrade">
+  <button class="upgrade upgrade_{{this}}">{{name}}</button>
+</template>
