@@ -5,9 +5,20 @@ import {Structure} from  "/imports/structure";
 
 Players = new Mongo.Collection("players");
 
+Players.before.update(function(userId, doc, fieldNames, modifier, options){
+  return true;
+});
+
+Players.allow({
+  update: function(userId, docs, fields, modifier){
+
+    return true;
+  }
+});
+
 
 Meteor.publish("players",function(){
-  return Players.find({});
+  return Players.find({user : this.userId});
 });
 Meteor.startup(() => {
   // code to run on server at startup

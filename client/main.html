@@ -3,13 +3,9 @@
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
   <button id="hardReset">HARD</button>
   {{#if currentUser}}
     {{> view1}}
-    {{debug time}}
-    <button id="time">+1</button>
-    {{time}}
   {{else}}
     {{> login}}
   {{/if}}
@@ -28,6 +24,7 @@
 </template>
 
 <template name="showUpgrades">
+
   {{#each upgrades}}
     {{> upgrade}}
   {{/each}}

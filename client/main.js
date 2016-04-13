@@ -1,23 +1,14 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import {Mongo} from "meteor/mongo";
+import {Structure} from  "/imports/structure";
 import './main.html';
 
 
 Players = new Mongo.Collection("players");
 
 Meteor.subscribe("players");
-Template.body.helpers({
-  time(){
-    return Players.findOne({},{counter : 1}).counter;
-  }
-})
-Template.body.events({
-  "click #time"(){
-    //console.log("asdf");
-    Meteor.call("inc");
-  }
-})
+
 
 
 Template.login.events({
@@ -34,7 +25,20 @@ Template.login.events({
 
 Template.showUpgrades.events({
   'click .upgrade'() {
-    Meteor.call("upgrade",this.name);
+    var id = Players.findOne({})._id;
+    Players.update({
+      _id : id
+    },
+    {
+      $push : {
+        structures : Structure.barracks,
+        "upgdares.completed" : {name : this.name }
+      },
+      $pull : {
+        "upgrades.available" : {name : this.name}
+      }
+    }
+    );
   }
 });
 
@@ -47,7 +51,7 @@ Template.body.events({
 
 Template.showStructures.helpers({
   structures(){
-    var f = Players.findOne({});
+    var f = Players.findOne();
     if (f){
       return f.structures;
     }
@@ -56,7 +60,7 @@ Template.showStructures.helpers({
 
 Template.showUpgrades.helpers({
   upgrades(){
-    var f = Players.findOne({});
+    var f = Players.findOne();
     if (f){
       return f.upgrades.available;
     }
