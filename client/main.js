@@ -6,8 +6,19 @@ import './main.html';
 
 Players = new Mongo.Collection("players");
 
-
 Meteor.subscribe("players");
+Template.body.helpers({
+  time(){
+    return Players.findOne({},{counter : 1}).counter;
+  }
+})
+Template.body.events({
+  "click #time"(){
+    //console.log("asdf");
+    Meteor.call("inc");
+  }
+})
+
 
 Template.login.events({
   'click button'() {

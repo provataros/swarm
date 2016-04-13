@@ -43,5 +43,8 @@ Meteor.methods({
   },
   upgrade(name){
     upgrades[name](name);
+  },
+  inc(){
+    Players.update({user : Meteor.userId()},{$inc : {counter : 1}});
   }
 })

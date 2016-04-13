@@ -7,10 +7,14 @@
   <button id="hardReset">HARD</button>
   {{#if currentUser}}
     {{> view1}}
+    {{debug time}}
+    <button id="time">+1</button>
+    {{time}}
   {{else}}
     {{> login}}
   {{/if}}
 </body>
+
 
 <template name="view1">
   {{> showUpgrades}}
