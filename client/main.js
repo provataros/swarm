@@ -10,6 +10,11 @@ Players = new Mongo.Collection("players");
 Meteor.subscribe("players");
 
 
+Meteor.startup(function(){
+  Meteor.loginWithPassword("p","a",function(e){
+  });
+})
+
 
 Template.login.events({
   'click button'() {
