@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import {Mongo} from "meteor/mongo";
 import {Player} from "/imports/player";
 import {Structure} from  "/imports/structure";
+import {Unit} from "/imports/unit";
 
 Players = new Mongo.Collection("players");
 
@@ -15,6 +16,21 @@ Players.allow({
     return true;
   }
 });
+
+units = {
+  spawn : {
+    hp : 15,
+    name : "spawn"
+  },
+  warrior : {
+    hp : 15,
+    name : "warrior"
+  },
+  drone : {
+    hp : 15,
+    name : "drone"
+  },
+}
 
 
 Meteor.publish("players",function(){
@@ -57,5 +73,9 @@ Meteor.methods({
   },
   inc(){
     Players.update({user : Meteor.userId()},{$inc : {counter : 1}});
+  },
+  createUnit(u){
+    console.log("creating unit "+u);
+    Players.update({user : Meteor.userId()},{$push : {units : units[u]}})
   }
 })

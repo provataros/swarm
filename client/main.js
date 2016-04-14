@@ -63,6 +63,16 @@ Template.showStructures.helpers({
   }
 });
 
+Template.listUnits.helpers({
+  units(){
+    var f = Players.findOne();
+    if (f){
+      return f.units;
+    }
+  }
+});
+
+
 Template.showUpgrades.helpers({
   upgrades(){
     var f = Players.findOne();
@@ -77,6 +87,19 @@ Template.showUnits.helpers({
     return this.units;
   }
 });
+Template.listUnits.helpers({
+  units(){
+    var f = Players.findOne();
+    if (f){
+      return f.units;
+    }
+  }
+});
+Template.unitCreate.events({
+  "click .createBtn"(){
+    Meteor.call("createUnit",this.name);
+  }
+})
 
 
 Template.registerHelper("debug", function(optionalValue) {
