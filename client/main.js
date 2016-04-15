@@ -15,6 +15,20 @@ Meteor.startup(function(){
   });
 })
 
+units = {
+  spawn : {
+    hp : 15,
+    name : "spawn"
+  },
+  warrior : {
+    hp : 15,
+    name : "warrior"
+  },
+  drone : {
+    hp : 15,
+    name : "drone"
+  },
+}
 
 Template.login.events({
   'click button'() {
@@ -63,14 +77,6 @@ Template.showStructures.helpers({
   }
 });
 
-Template.listUnits.helpers({
-  units(){
-    var f = Players.findOne();
-    if (f){
-      return f.units;
-    }
-  }
-});
 
 
 Template.showUpgrades.helpers({
@@ -82,24 +88,6 @@ Template.showUpgrades.helpers({
   }
 });
 
-Template.showUnits.helpers({
-  units(){
-    return this.units;
-  }
-});
-Template.listUnits.helpers({
-  units(){
-    var f = Players.findOne();
-    if (f){
-      return f.units;
-    }
-  }
-});
-Template.unitCreate.events({
-  "click .createBtn"(){
-    Meteor.call("createUnit",this.name);
-  }
-})
 
 
 Template.registerHelper("debug", function(optionalValue) {

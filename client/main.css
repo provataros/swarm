@@ -12,6 +12,11 @@
 .unit {
     width : 15px;
     height : 15px;
+    display : inline-block;
+    margin : 0px;
+    padding : 0px;
+    box-sizing: border-box;
+    border : 0px;
 }
 .unit_spawn {
   background-color: cyan;
@@ -21,4 +26,7 @@
 }
 .unit_warrior {
   background-color: red;
+}
+#unitlist{
+  font-size: 0px;
 }

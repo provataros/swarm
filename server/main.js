@@ -12,52 +12,15 @@ Players.before.update(function(userId, doc, fieldNames, modifier, options){
 
 Players.allow({
   update: function(userId, docs, fields, modifier){
-
+    console.log(fields);
     return true;
   }
 });
 
-units = {
-  spawn : {
-    hp : 15,
-    name : "spawn"
-  },
-  warrior : {
-    hp : 15,
-    name : "warrior"
-  },
-  drone : {
-    hp : 15,
-    name : "drone"
-  },
-}
 
-
-Meteor.publish("players",function(){
-  return Players.find({user : this.userId});
-});
 Meteor.startup(() => {
   // code to run on server at startup
 });
-
-var upgrades = {
-  barracks(e){
-    Players.update({
-      user : Meteor.userId()
-    },
-    {
-      $push : {
-        structures : Structure.barracks,
-        "upgdares.completed" : {name : e }
-      },
-      $pull : {
-        "upgrades.available" : {name : e}
-      }
-    }
-    );
-    console.log(this);
-  }
-}
 
 Meteor.methods({
   hardReset(){
