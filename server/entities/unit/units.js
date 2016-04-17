@@ -1,3 +1,4 @@
+import {Players} from "/imports/database";
 
 units = {
   spawn : {
@@ -13,3 +14,11 @@ units = {
     name : "drone"
   },
 }
+
+
+Meteor.methods({
+  createUnit(u){
+    console.log("creating unit "+u);
+    Players.update({user : Meteor.userId()},{$push : {units : units[u]}})
+  }
+})

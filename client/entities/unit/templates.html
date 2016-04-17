@@ -5,3 +5,19 @@
 <template name = "unitList">
   <div class = "unit unit_{{name}}"></div>
 </template>
+
+
+<template name="showUnits">
+
+  {{#each units}}
+    {{> unitCreate}}
+  {{/each}}
+</template>
+
+<template name="listUnits">
+  <div id="unitlist">
+  {{#each units}}
+    {{> unitList}}
+  {{/each}}
+</div>
+</template>

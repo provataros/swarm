@@ -1,3 +1,5 @@
+import {Players} from "/imports/database";
+import { Template } from 'meteor/templating';
 
 Template.listUnits.helpers({
   units(){

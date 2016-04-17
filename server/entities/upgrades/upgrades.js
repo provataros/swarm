@@ -1,3 +1,5 @@
+import {Players} from "/imports/database";
+
 upgrades = {
   barracks(e){
     Players.update({
@@ -16,3 +18,10 @@ upgrades = {
     console.log(this);
   }
 }
+
+
+Meteor.methods({
+  upgrade(name){
+    upgrades[name](name);
+  },
+})

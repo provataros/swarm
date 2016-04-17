@@ -1,34 +1,18 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-import {Mongo} from "meteor/mongo";
 import {Structure} from  "/imports/structure";
 import './main.html';
+import {Player} from "/imports/player";
+import {Players} from "/imports/database"
 
-
-Players = new Mongo.Collection("players");
 
 Meteor.subscribe("players");
-
 
 Meteor.startup(function(){
   Meteor.loginWithPassword("p","a",function(e){
   });
-})
+});
 
-units = {
-  spawn : {
-    hp : 15,
-    name : "spawn"
-  },
-  warrior : {
-    hp : 15,
-    name : "warrior"
-  },
-  drone : {
-    hp : 15,
-    name : "drone"
-  },
-}
 
 Template.login.events({
   'click button'() {
@@ -68,16 +52,6 @@ Template.body.events({
   }
 });
 
-Template.showStructures.helpers({
-  structures(){
-    var f = Players.findOne();
-    if (f){
-      return f.structures;
-    }
-  }
-});
-
-
 
 Template.showUpgrades.helpers({
   upgrades(){
@@ -87,8 +61,6 @@ Template.showUpgrades.helpers({
     }
   }
 });
-
-
 
 Template.registerHelper("debug", function(optionalValue) {
   if (optionalValue) {

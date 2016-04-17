@@ -1,4 +1,8 @@
 /* CSS declarations go here */
+body,html{
+  margin : 0px;
+  padding : 0px;
+}
 .container{
   margin : 10px;
   display : block;

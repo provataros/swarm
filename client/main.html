@@ -5,7 +5,7 @@
 <body>
   <button id="hardReset">HARD</button>
   {{#if currentUser}}
-    {{> view1}}
+    {{> aomView}}
   {{else}}
     {{> login}}
   {{/if}}
@@ -13,9 +13,11 @@
 
 
 <template name="view1">
+
   {{> showUpgrades}}
   {{> showStructures}}
   {{> listUnits}}
+
 </template>
 
 <template name="login">
@@ -25,39 +27,11 @@
 </template>
 
 <template name="showUpgrades">
-
   {{#each upgrades}}
     {{> upgrade}}
   {{/each}}
 </template>
 
-<template name="showStructures">
-  {{#each structures}}
-    {{> structure}}
-  {{/each}}
-</template>
-
-<template name="structure">
-  <div class="container">
-    {{name}}
-    {{> showUnits}}
-  </div>
-</template>
-
-<template name="showUnits">
-
-  {{#each units}}
-    {{> unitCreate}}
-  {{/each}}
-</template>
-
-<template name="listUnits">
-  <div id="unitlist">
-  {{#each units}}
-    {{> unitList}}
-  {{/each}}
-</div>
-</template>
 
 <template name="upgrade">
   <button class="upgrade upgrade_{{this}}">{{name}}</button>
