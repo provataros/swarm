@@ -1,5 +1,5 @@
 import {Players} from "/imports/database";
-import { Template } from 'meteor/templating';
+import {Template } from 'meteor/templating';
 
 Template.listStructures.helpers({
   structures(){
@@ -22,3 +22,10 @@ Template.registerHelper("showStructures", function(optionalValue) {
     return f;
   }
 });
+
+Template.structure.events({
+  "click" : function(e){
+    e.stopPropagation();
+    Session.set("selectedStructure",this);
+  }
+})

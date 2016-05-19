@@ -9,8 +9,10 @@ import {Players} from "/imports/database"
 Meteor.subscribe("players");
 
 Meteor.startup(function(){
-  Meteor.loginWithPassword("p","a",function(e){
-  });
+  if (!Meteor.userId()){
+    Meteor.loginWithPassword("p","a",function(e){});
+  }
+  Session.set("selectedStructure",null);
 });
 
 
@@ -49,6 +51,9 @@ Template.showUpgrades.events({
 Template.body.events({
   "click #hardReset"(){
     Meteor.call("hardReset");
+  },
+  "click"(){
+    console.log("Asdf");
   }
 });
 
@@ -65,5 +70,12 @@ Template.showUpgrades.helpers({
 Template.registerHelper("debug", function(optionalValue) {
   if (optionalValue) {
     console.log(optionalValue);
+  }
+});
+
+Template.registerHelper("player", function(optionalValue) {
+  var f = Players.findOne();
+  if (f){
+    return f;
   }
 });

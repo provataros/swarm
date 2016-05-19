@@ -1,24 +1,22 @@
 import {Players} from "/imports/database";
+import {Unit} from "/imports/unit"
 
-units = {
-  spawn : {
-    hp : 15,
-    name : "spawn"
-  },
-  warrior : {
-    hp : 15,
-    name : "warrior"
-  },
-  drone : {
-    hp : 15,
-    name : "drone"
-  },
+function createUnit(u){
+  Players.update({user : Meteor.userId()},{$push : {units : unit[u]}})
 }
 
-
 Meteor.methods({
-  createUnit(u){
-    console.log("creating unit "+u);
-    Players.update({user : Meteor.userId()},{$push : {units : units[u]}})
+  queueUnit(u){
+    var d =  Date.now();
+    Players.update({user : Meteor.userId()},{
+      $push : {
+        queue : {
+          id : d,
+          time : d + Unit[u].time,
+          action : createUnit,
+          object : u,
+        }
+      }
+    })
   }
 })

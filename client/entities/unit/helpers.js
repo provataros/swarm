@@ -25,8 +25,6 @@ Template.listUnits.helpers({
 });
 Template.unitCreate.events({
   "click .createBtn"(){
-    Meteor.call("createUnit",this.name);
-    //console.log("tsak");
-      //Players.update({_id : Players.findOne({})._id},{$push : {units : units[this.name]}})
+    Meteor.call("queueUnit",this.name);
   }
 });

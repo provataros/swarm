@@ -1,27 +1,25 @@
 import {Players} from "/imports/database";
+import {Structure} from "/imports/structure";
+import {Upgrade} from "/imports/upgrade";
 
-upgrades = {
-  barracks(e){
-    Players.update({
-      user : Meteor.userId()
+function researchUpgrade(u){
+  Players.update({user : Meteor.userId()},{
+    $push : {
+      structures : Structure[u],
+      "upgdares.completed" : {name : u }
     },
-    {
-      $push : {
-        structures : Structure.barracks,
-        "upgdares.completed" : {name : e }
-      },
-      $pull : {
-        "upgrades.available" : {name : e}
-      }
+    $pull : {
+      "upgrades.available" : {name : u}
     }
-    );
-    console.log(this);
-  }
+  })
 }
 
-
 Meteor.methods({
-  upgrade(name){
-    upgrades[name](name);
-  },
-})
+  queueUpgrade(name){
+    Players.update({user : Meteor.userId()},{$push : {queue : {
+      time : Date.now(),
+      action : researchUpgrade,
+      object : name
+    }
+  }})}
+});

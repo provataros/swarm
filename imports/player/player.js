@@ -11,6 +11,10 @@ var player = {
             {
               name : "spawn",
               hp   : 10
+            },
+            {
+              name : "larva",
+              hp   : 5
             }
           ]
         },

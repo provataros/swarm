@@ -1,10 +1,18 @@
 <template name="aomView">
-  {{#with player}}
-  {{debug showStructures}}
   {{> showStructures}}
+  {{> showUpgrades}}
   {{> listUnits}}
+  {{> showQueue}}
   <div id = "bottom-panel">
-    {{> showUnits}}
+    {{#with selectedStructure}}
+      {{> showUnits}}
+    {{/with}}
   </div>
-  {{with}}
+</template>
+
+
+<template name = "showQueue">
+  {{#each queue}}
+    {{time}}<br>
+  {{/each}}
 </template>

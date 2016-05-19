@@ -5,12 +5,7 @@ import {Structure} from  "/imports/structure";
 import {Unit} from "/imports/unit";
 import {Players} from "/imports/database";
 
-
-
-
-
 Meteor.startup(() => {
-  // code to run on server at startup
 });
 
 Meteor.methods({
