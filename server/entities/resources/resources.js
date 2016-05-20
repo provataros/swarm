@@ -1,21 +1,22 @@
 import {Players} from "/imports/database";
-import {Unit} from "/imports/unit"
+import {Resource} from "/imports/resource"
 
 
-function createUnit(id,u){
+function gatherResource(id,u){
+  var res = "resources."+u.object;
   Players.update({user : id},{
-    $pull : {queue : { "id" : u.id } },
-    $push : {units : Unit[u.object]}
+    $pull : {queue : { id : u.id } },
+    $inc :  { "resources."+u.object : Resource[u.object].amount}
   });
 }
 
 Meteor.methods({
-  queueUnit(u){
+  queueGather(u){
+    console.log(u);
     var d =  Date.now();
     var o = {
       id : d,
-      time : d + Unit[u].time,
-      action : "createUnit",
+      time : d + Resource[u].time,
       object : u
     }
     var id = Meteor.userId();
@@ -24,10 +25,10 @@ Meteor.methods({
         queue : o
       }
     })
-    console.log("sdfaf");
+
     Meteor.setTimeout(function(){
-      createUnit(id,o);
+      gatherResource(id,o);
       console.log("this");
-    },Unit[u].time);
+    },Resource[u].time);
   }
 })

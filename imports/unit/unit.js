@@ -2,22 +2,22 @@ var unit = {
   spawn : {
     hp : 15,
     name : "spawn",
-    time : 15000
+    time : 20000
   },
   warrior : {
     hp : 15,
     name : "warrior",
-    time : 25000
+    time : 1000
   },
   drone : {
     hp : 13,
     name : "drone",
-    time : 35000
+    time : 2000
   },
   larva : {
     hp : 14,
     name : "larva",
-    time : 45000
+    time : 3000
   },
 }
 

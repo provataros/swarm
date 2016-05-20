@@ -4,7 +4,7 @@ import {Structure} from  "/imports/structure";
 import './main.html';
 import {Player} from "/imports/player";
 import {Players} from "/imports/database"
-
+import {Progressbar} from "./imports/progressbar"
 
 Meteor.subscribe("players");
 
@@ -46,15 +46,13 @@ Template.showUpgrades.events({
     );
   }
 });
-
+Progressbar.run();
 
 Template.body.events({
   "click #hardReset"(){
     Meteor.call("hardReset");
+    Meteor.loginWithPassword("p","a",function(e){});
   },
-  "click"(){
-    console.log("Asdf");
-  }
 });
 
 
@@ -79,3 +77,20 @@ Template.registerHelper("player", function(optionalValue) {
     return f;
   }
 });
+
+/*
+if (Meteor.isClient) {
+
+  // log sent messages
+  var _send = Meteor.connection._send;
+  Meteor.connection._send = function (obj) {
+    console.log("send", obj);
+    _send.call(this, obj);
+  };
+
+  // log received messages
+  Meteor.connection._stream.on('message', function (message) {
+    console.log("receive", JSON.parse(message));
+  });
+}
+*/

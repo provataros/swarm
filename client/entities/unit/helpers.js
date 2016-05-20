@@ -1,5 +1,7 @@
 import {Players} from "/imports/database";
 import { Template } from 'meteor/templating';
+import {Unit} from "/imports/unit"
+
 
 Template.listUnits.helpers({
   units(){
@@ -15,6 +17,7 @@ Template.showUnits.helpers({
     return this.units;
   }
 });
+
 Template.listUnits.helpers({
   units(){
     var f = Players.findOne();
