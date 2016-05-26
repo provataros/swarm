@@ -1,43 +1,53 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-import {Structure} from  "/imports/structure";
 import './main.html';
-import {Player} from "/imports/player";
-import {Players} from "/imports/database"
-import {Progressbar} from "./imports/progressbar"
 import {Mongo} from "meteor/mongo";
-
+import {Factory} from "/imports/factory"
 
 localdb = new Mongo.Collection(null);
-
+var id = {};
 Meteor.startup(function(){
   if (!Meteor.userId()){
-    Meteor.loginWithPassword("p","a",function(e){});
+    Meteor.loginWithPassword("p","a",function(e){
+
+    });
   }
 });
 
 function sync(id,fields){
-  if (fields){
-    localdb.update({_id : id},{$set : fields },{upsert : true});
-  }
-  console.log(fields);
-  console.log(localdb.findOne());
+  f = {a : 5};
+  localdb.update({_id : Meteor.userId()},f,{upsert : true});
+  console.log("sync()");
 }
 
-Accounts.onLogin(function(a,b,c){
-  Meteor.subscribe("players", {
-    onReady: function(){
-      Players.find({user : Meteor.userId()}).observeChanges({
-         added: function (id, fields) {
-             sync(id,fields);
-         },
-         changed: function (id, fields) {
-             sync(id,fields);
-         },
-         removed: function (id) {
-             sync(id);
-        }
-      });;
+Accounts.onLogin(function(){
+  id = {_id : Meteor.userId()}
+  sync();
+});
+
+Template.body.events({
+  "click #gogogo" : create
+});
+
+
+
+function create(){
+  localdb.update({user : Meteor.userId()},{$set : { f : Date.now()}});
+  var u = Factory.createUnit();
+  u.id= Math.random();
+  localdb.update(id,{$push : {units : u}});
+  console.log(localdb.findOne());
+  Meteor.call("createUnit",function(err,result){
+    if (result == false){
+      console.log(u.id);
+      localdb.update(id,{$pull : {units : {id : u.id} } });
+      console.log(localdb.findOne());
+    }
+    if (result == true){
+      localdb.update({_id : Meteor.userId(), "units.id": {$exists : true}},{$unset : {"units.$.id" : true} });
+
+      console.log(localdb.findOne());
     }
   });
-});
+
+}
