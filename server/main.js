@@ -17,4 +17,8 @@ Meteor.methods({
     p.user = u;
     Players.insert(p);
   },
+  test(a,b,c){
+    console.log(a,b,c);
+    return false;
+  }
 });
