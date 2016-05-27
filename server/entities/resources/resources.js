@@ -4,9 +4,11 @@ import {Resource} from "/imports/resource"
 
 function gatherResource(id,u){
   var res = "resources."+u.object;
+  var inc  = {};
+  inc[res] =   Resource[u.object].amount
   Players.update({user : id},{
     $pull : {queue : { id : u.id } },
-    $inc :  { "resources."+u.object : Resource[u.object].amount}
+    $inc : inc
   });
 }
 
