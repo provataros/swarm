@@ -12,8 +12,9 @@ Meteor.methods({
     Players.remove({});
     Accounts.users.remove({});
     var u = Accounts.createUser({username : "p",password : "a"});
-    var p = {};
+    var p = Factory.player.default();
     p.user = u;
+    Players.insert(p);
   },
   createUnit(name){
     var f = Factory.unit.create(name);

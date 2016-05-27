@@ -9,7 +9,6 @@ var id = {};
 Meteor.startup(function(){
   if (!Meteor.userId()){
     Meteor.loginWithPassword("p","a",function(e){
-
     });
   }
 });
@@ -32,13 +31,20 @@ Accounts.onLogin(function(){
   sync();
 });
 
+Template.registerHelper("player",function(){
+  return localdb.findOne({});
+});
+
 Template.body.events({
-  "click #gogogo" : function(){
-    create("spawn");
+  "click #hardReset" : function(){
+    Meteor.call("hardReset");
   }
 });
 
 
+
+
+/*
 
 function create(name){
   localdb.update({user : Meteor.userId()},{$set : { f : Date.now()}});
@@ -60,3 +66,10 @@ function create(name){
   });
 
 }
+
+
+*/
+
+Template.registerHelper("debug",function(arg){
+  if (arg)console.log(arg);
+})

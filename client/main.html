@@ -4,17 +4,16 @@
 
 <body id = "body">
   <button id="hardReset">HARD</button>
-  <button id="gogogo">test</button>
-  {{#if false}}
-    {{#if currentUser}}
-      {{#with player}}
-        {{> aomView}}
-      {{/with}}
-    {{else}}
-      {{> login}}
-    {{/if}}
+  {{#if currentUser}}
+    {{debug player}}
+    {{#with player}}
+      {{> aomView}}
+    {{/with}}
+  {{else}}
+    {{> login}}
   {{/if}}
 </body>
+
 
 <template name="login">
   <input type="text" id = "uid">

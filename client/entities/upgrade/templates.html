@@ -1,0 +1,19 @@
+
+
+<template name = "upgradeList">
+  <div class = "upgrade upgrade_{{name}}"></div>
+</template>
+
+<template name="showUpgrades">
+  <div id="upgradelist">
+  {{#each upgrades}}
+    {{> upgrade}}
+  {{/each}}
+</div>
+</template>
+
+<template name="upgrade">
+  <div class="upgrade_icon">
+    {{name}}
+  </div>
+</template>
