@@ -15,9 +15,16 @@ Meteor.startup(function(){
 });
 
 function sync(id,fields){
-  f = {a : 5};
-  localdb.update({_id : Meteor.userId()},f,{upsert : true});
-  console.log("sync()");
+  Meteor.call("getState",function(err,result){
+    if (err){
+      console.log(err);
+      return;
+    }
+    console.log(result);
+    delete result._id;
+    localdb.update({_id : Meteor.userId()},result,{upsert : true});
+    console.log("sync()");
+  })
 }
 
 Accounts.onLogin(function(){
@@ -26,18 +33,20 @@ Accounts.onLogin(function(){
 });
 
 Template.body.events({
-  "click #gogogo" : create
+  "click #gogogo" : function(){
+    create("spawn");
+  }
 });
 
 
 
-function create(){
+function create(name){
   localdb.update({user : Meteor.userId()},{$set : { f : Date.now()}});
-  var u = Factory.createUnit();
+  var u = Factory.unit.create(name);
   u.id= Math.random();
   localdb.update(id,{$push : {units : u}});
   console.log(localdb.findOne());
-  Meteor.call("createUnit",function(err,result){
+  Meteor.call("createUnit",name,function(err,result){
     if (result == false){
       console.log(u.id);
       localdb.update(id,{$pull : {units : {id : u.id} } });

@@ -1,6 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from "meteor/mongo";
 import {Factory} from "/imports/factory"
+
+var Players = new Mongo.Collection("players");
+
 Meteor.startup(() => {
 });
 
@@ -12,7 +15,12 @@ Meteor.methods({
     var p = {};
     p.user = u;
   },
-  createUnit(){
+  createUnit(name){
+    var f = Factory.unit.create(name);
+    if (!Factory.unit.exists(name))return false;
     return true;
+  },
+  getState(){
+    return Players.findOne({user : Meteor.userId()});
   }
 });
