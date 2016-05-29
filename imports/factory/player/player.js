@@ -1,20 +1,19 @@
+import {Structure} from "../structure/structure.js"
+import {Resource} from "../resource/resource.js"
+import {Upgrade} from "../upgrade/upgrade.js"
+import {Unit} from "../unit/unit.js"
+
+
 var player = {
   default(){
     return {
-      upgrades : {
-        available : [{name : "barracks"}]
+      resources : {
+        meat : Resource("meat"),
+        metal : Resource("metal")
       },
       structures : [
-        {
-          name : "hatchery",
-          units : [
-            {
-              name : "spawn",
-              hp   : 10
-            }
-          ]
-        },
-
+        Structure("hatchery")
+        ,
       ]
     }
   }

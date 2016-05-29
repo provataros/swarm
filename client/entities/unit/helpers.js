@@ -1,31 +1,25 @@
 import {Template } from 'meteor/templating';
+import {Factory} from "/imports/factory";
+import {Game} from "/imports/game"
 
-
-Template.listUnits.helpers({
-  units(){
-    var f = Players.findOne();
-    if (f){
-      return f.units;
-    }
-  }
-});
-
-Template.showUnits.helpers({
-  units(){
-    return this.units;
-  }
-});
-
-Template.listUnits.helpers({
-  units(){
-    var f = Players.findOne();
-    if (f){
-      return f.units;
-    }
-  }
-});
 Template.unitCreate.events({
-  "click .createBtn"(){
-    Meteor.call("queueUnit",this.name);
+  "click button"(){
+    console.log(this);
+    var u = Game.unit.create(this);
+  }
+});
+
+Template.unitList.events({
+  "click" : function(e){
+    e.stopPropagation();
+    Session.set("selectedUnit",this);
+    console.log(this);
+  }
+});
+
+Template.registerHelper("selectedUnit",function(){
+  var s = Session.get("selectedUnit");
+  if (s){
+    return s;
   }
 });

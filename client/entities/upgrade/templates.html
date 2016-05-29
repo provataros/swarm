@@ -5,11 +5,14 @@
 </template>
 
 <template name="showUpgrades">
-  <div id="upgradelist">
-  {{#each upgrades}}
-    {{> upgrade}}
-  {{/each}}
-</div>
+  {{#with selectedStructure}}
+    <div id="upgradelist">
+      {{#each upgrades.available}}
+        {{> upgrade}}
+      {{/each}}
+    </div>
+  {{/with}}
+
 </template>
 
 <template name="upgrade">

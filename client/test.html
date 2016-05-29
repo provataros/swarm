@@ -1,0 +1,11 @@
+
+<body id = "body">
+  <button id="hardReset">HARD</button>
+  {{#if currentUser}}
+    {{#with player}}
+      {{> aomView}}
+    {{/with}}
+  {{else}}
+    {{> login}}
+  {{/if}}
+</body>

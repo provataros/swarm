@@ -1,6 +1,14 @@
 
 <template name="aomView">
+  {{debug player}}
+  {{> showResources}}
   {{> showStructures}}
+  {{> listUnits}}
+  {{> selectedUnit}}
+  {{> showUpgrades}}
   <div id = "bottom-panel">
+    {{#each selectedStructure.units}}
+      {{> unitCreate}}
+    {{/each}}
   </div>
 </template>

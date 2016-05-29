@@ -1,30 +1,24 @@
 import {Template } from 'meteor/templating';
+import {Factory} from "/imports/factory";
+import {Game} from "/imports/game"
 
-Template.listStructures.helpers({
-  structures(){
-    var f = Players.findOne();
-    if (f){
-      return f.structures;
-    }
+Template.registerHelper("selectedStructure",function(){
+  var s = Session.get("selectedStructure");
+  if (s){
+    return [];
   }
-});
-
-Template.showStructures.helpers({
-  structures(){
-    return this.structures;
-  }
-});
-
-Template.registerHelper("showStructures", function(optionalValue) {
-  var f = Players.findOne();
-  if (f){
-    return f;
-  }
-});
+})
 
 Template.structure.events({
   "click" : function(e){
     e.stopPropagation();
     Session.set("selectedStructure",this);
+  }
+})
+
+Template.structureCreate.events({
+  "click button"(){
+    console.log(this);
+    var u = Game.unit.create(this);
   }
 })

@@ -2,17 +2,6 @@
   <title>simple</title>
 </head>
 
-<body id = "body">
-  <button id="hardReset">HARD</button>
-  {{#if currentUser}}
-    {{debug player}}
-    {{#with player}}
-      {{> aomView}}
-    {{/with}}
-  {{else}}
-    {{> login}}
-  {{/if}}
-</body>
 
 
 <template name="login">

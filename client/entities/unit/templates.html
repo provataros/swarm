@@ -8,7 +8,7 @@
 
 
 <template name="showUnits">
-  
+
   {{#each units}}
     {{> unitCreate}}
   {{/each}}
@@ -20,4 +20,12 @@
     {{> unitList}}
   {{/each}}
 </div>
+</template>
+
+<template name = "selectedUnit">
+  {{#with selectedUnit}}
+    Name : {{name}}<br>
+    HP : {{stats.hp}}<br>
+    Speed : {{stats.speed}}<br>
+  {{/with}}
 </template>
