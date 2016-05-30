@@ -4,7 +4,7 @@ import {Game} from "/imports/game"
 Template.upgrade.events({
   "click"(){
     //Meteor.call("queueUpgrade",this.name);
-    console.log(this);
     Game.upgrade.execute(this);
+    console.log(this);
   }
 });

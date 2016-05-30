@@ -6,9 +6,10 @@ _upgrade = {};
 
 var actions = {
   barracks(){
-    console.log(localdb.findOne())
-    localdb.update({},{ $pull : {"structures.upgrades.available" : {"name" : "barracks" }}});
-    console.log(localdb.findOne())
+    localdb.update({"structures.upgrades.available" : {$exists : true} },{
+      $pull : {"structures.$.upgrades.available" : {name : "barracks"} },
+      $push : {"structures" : Factory.structure("barracks") },
+    });
   },
 }
 

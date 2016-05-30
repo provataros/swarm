@@ -1,7 +1,11 @@
 var upgrades = {
   barracks : {
     name : "barracks",
-    action : "test"
+    action : "barracks"
+  },
+  hive : {
+    name : "hive",
+    action : "hive"
   },
 }
 
