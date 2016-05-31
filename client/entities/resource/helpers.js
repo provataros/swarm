@@ -3,7 +3,7 @@ import {Game} from "/imports/game"
 
 Template.showResources.events({
   "click button"(e){
-    Game.resource.gather(this.name);
+    Game.action(this);
   }
 });
 

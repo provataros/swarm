@@ -33,10 +33,3 @@ Template.structure.events({
     select(this);
   }
 })
-
-Template.structureCreate.events({
-  "click button"(){
-    console.log(this);
-    var u = Game.unit.create(this);
-  }
-})

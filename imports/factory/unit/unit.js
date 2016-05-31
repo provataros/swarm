@@ -1,6 +1,7 @@
 var units = {
   spawn : {
     name : "spawn",
+    type : "unit",
     cost : [
       {
         type : "meat",
@@ -19,6 +20,7 @@ var units = {
   },
   drone : {
     name : "drone",
+    type : "unit",
     cost : [
       {
         type : "meat",
@@ -37,6 +39,7 @@ var units = {
   },
   warrior : {
     name : "warrior",
+    type : "unit",
     cost : [
       {
         type : "meat",

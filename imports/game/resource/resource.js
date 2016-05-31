@@ -13,7 +13,7 @@ function sufficientResources(state,unit){
 function gather(unit){
   console.log(unit);
   var tmp = {};
-  tmp["resources."+unit+".amount"] = 10;
+  tmp["resources."+unit.name+".amount"] = 10;
     localdb.update({},{$inc : tmp });
 }
 

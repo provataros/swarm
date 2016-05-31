@@ -1,10 +1,12 @@
 var upgrades = {
   barracks : {
+    type : "upgrade",
     name : "barracks",
     action : "barracks",
     time : 5000,
   },
   hive : {
+    type : "upgrade",
     name : "hive",
     action : "hive",
     time : 15000,

@@ -1,9 +1,11 @@
 var resources = {
   meat : {
+    type : "resource",
     name : "meat",
     amount : 250,
   },
   metal : {
+    type : "resource",
     name : "metal",
     amount : 500,
   },

@@ -7,7 +7,7 @@ import {Progressbar} from "/client/imports/progressbar";
 Template.unitCreate.events({
   "click button"(){
     //Progressbar.register()
-    var u = Game.unit.create(this);
+    var u = Game.action(this);
   }
 });
 

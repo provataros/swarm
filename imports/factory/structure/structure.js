@@ -4,6 +4,7 @@ import {Upgrade} from "../upgrade/upgrade.js"
 
 var structures = {
   hatchery : {
+    type : "structure",
     name : "hatchery",
     units : [
       Unit("spawn"),
@@ -16,6 +17,7 @@ var structures = {
     },
   },
   barracks : {
+    type : "structure",
     name : "barracks",
     units : [
       Unit("warrior"),
