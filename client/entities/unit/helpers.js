@@ -1,10 +1,12 @@
 import {Template } from 'meteor/templating';
 import {Factory} from "/imports/factory";
-import {Game} from "/imports/game"
+import {Game} from "/imports/game";
+
+import {Progressbar} from "/client/imports/progressbar";
 
 Template.unitCreate.events({
   "click button"(){
-    console.log(this);
+    //Progressbar.register()
     var u = Game.unit.create(this);
   }
 });

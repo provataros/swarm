@@ -14,7 +14,8 @@ var units = {
     stats : {
       hp : 10,
       speed : 5,
-    }
+    },
+    time : 1000,
   },
   drone : {
     name : "drone",
@@ -31,7 +32,8 @@ var units = {
     stats : {
       hp : 120,
       speed : 16,
-    }
+    },
+    time : 1000,
   },
   warrior : {
     name : "warrior",
@@ -48,7 +50,8 @@ var units = {
     stats : {
       hp : 250,
       speed : 20,
-    }
+    },
+    time : 1000,
   }
 }
 

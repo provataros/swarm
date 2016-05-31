@@ -2,6 +2,10 @@ var callbacks = {};
 var interval = 10;
 var running = false;
 var ticker;
+
+
+
+
 function tick(){
   for (var cb in callbacks){
     var c = callbacks[cb];
