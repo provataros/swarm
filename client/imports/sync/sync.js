@@ -21,7 +21,6 @@ function sync(){
     }
     delete result._id;
     localdb.update({},result,{upsert : true});
-    console.log(localdb.findOne());
   })
 }
 

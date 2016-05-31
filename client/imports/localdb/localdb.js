@@ -2,8 +2,6 @@ import {Mongo} from "meteor/mongo";
 
 _localdb = new Mongo.Collection(null);
 
-
-
 _localdb.importState = function(state){
   delete state._id;
   this.update({},state,{upsert : true,reactive : false});

@@ -8,7 +8,7 @@ Template.registerHelper("selectedStructure", function() {
 
 var timeouts = {};
 
-/*
+
 Template.showQueue.helpers({
   time(){
     var id = "t"+this.id;
@@ -27,4 +27,3 @@ Template.showQueue.helpers({
     return this.time
   }
 })
-*/

@@ -15,7 +15,6 @@ Template.unitList.events({
   "click" : function(e){
     e.stopPropagation();
     Session.set("selectedUnit",this);
-    console.log(this);
   }
 });
 

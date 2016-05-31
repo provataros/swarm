@@ -17,7 +17,6 @@ function get(){
     var state =  Factory.player.default();
   }
   localdb.importState(state);
-  console.log(state);
 }
 
 function set(){

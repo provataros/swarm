@@ -1,8 +1,6 @@
+import "./test.js";
 import { Template } from 'meteor/templating';
-
-
 import './main.html';
-import "./test.js"
 
 
 

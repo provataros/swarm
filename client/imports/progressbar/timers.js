@@ -1,8 +1,11 @@
+import {Persistence} from "/client/imports/persistence"
+import {localdb} from "/client/imports/localdb";
+import {Game} from "/imports/game";
+
 var callbacks = {};
-var interval = 10;
+var interval = 17;
 var running = false;
 var ticker;
-
 
 
 
@@ -47,6 +50,53 @@ function run(){
   if (!running) ticker = setInterval(tick,interval);
   running = true;
 }
+
+Game._action = Game.action;
+Game.action = medium;
+
+
+function medium(obj){
+  var now = Date.now();
+  if (!obj.time){
+    Game._action(obj);
+    return;
+  }
+  if (!Game.enough(obj)){
+    return;
+  }
+  var q =  {
+    start : now,
+    end : now + obj.time,
+    obj : obj
+  };
+  localdb.update({},{$push : {
+    queue : q
+  }});
+  action(q);
+}
+
+function action(q){
+  register(q.start,q.start,q.end,
+  function(f){
+    $("#t"+q.start).val(f);
+  },
+  function(){
+    Game._action(q.obj);
+    localdb.update({},{$pull : {
+      queue : {
+        start : q.start
+      }
+    }});
+  });
+}
+
+Meteor.startup(function(){
+  var timers = localdb.findOne().queue;
+  if (!timers)return;
+  for (var i=0;i<timers.length;i++){
+    action(timers[i]);
+  }
+});
 
 
 export const Progressbar = {

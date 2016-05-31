@@ -1,6 +1,5 @@
 
 <template name="aomView">
-  {{debug player}}
   {{> showResources}}
   {{> showStructures}}
   {{> listUnits}}
@@ -11,4 +10,13 @@
       {{> unitCreate}}
     {{/each}}
   </div>
+  {{> showQueue}}
+</template>
+
+
+<template name = "showQueue">
+  {{#each queue}}
+    {{debug this}}
+    {{start}}<progress max = 100 id="t{{start}}" value = 0></progress><br>
+  {{/each}}
 </template>
