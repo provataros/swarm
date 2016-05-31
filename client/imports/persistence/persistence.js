@@ -5,8 +5,9 @@ import {Template} from "meteor/templating"
 
 var pako = require("pako");
 
-
-
+Template.registerHelper("offline",function(){
+  return true;
+});
 
 function get(){
   if (typeof(Storage) !== "undefined" && localStorage.getItem("state") != undefined) {

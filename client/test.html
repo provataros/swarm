@@ -1,11 +1,20 @@
 
 <body id = "body">
   <button id="hardReset">HARD</button>
-  {{#if currentUser}}
+  {{debug player}}
+  {{#if online}}
+    {{#if currentUser}}
+      {{#with player}}
+        {{> aomView}}
+      {{/with}}
+    {{else}}
+      {{> login}}
+    {{/if}}
+  {{/if}}
+  {{debug offline}}
+  {{#if offline}}
     {{#with player}}
       {{> aomView}}
     {{/with}}
-  {{else}}
-    {{> login}}
   {{/if}}
 </body>

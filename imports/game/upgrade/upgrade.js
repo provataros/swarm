@@ -11,6 +11,9 @@ var actions = {
       $push : {"structures" : Factory.structure("barracks") },
     });
   },
+  hive(){
+    console.log("not implemented yet");
+  }
 }
 
 

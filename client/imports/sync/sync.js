@@ -1,6 +1,9 @@
 import {localdb} from "/client/imports/localdb";
 import {Template} from "meteor/templating"
 
+Template.registerHelper("online",function(){
+  return true;
+});
 
 Meteor.startup(function(){
   if (!Meteor.userId()){

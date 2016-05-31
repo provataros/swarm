@@ -22,7 +22,7 @@ var structures = {
     ],
     upgrades : {
       available : [
-        Upgrade("Hive"),
+        Upgrade("hive"),
       ]
     },
   }
