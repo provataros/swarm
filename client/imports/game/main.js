@@ -23,22 +23,54 @@ var actions = {
     resource : Resource.gather,
     structure : _true,
 }
-var enough = {
-    unit : Unit.enough,
+var reserve = {
+    unit : Unit.reserve,
     structure : _true,
     resource : _true,
-    upgrade : _true,
+    upgrade : Upgrade.reserve,
 }
 
+var cancel = {
+    unit : Unit.cancel,
+    structure : _true,
+    resource : _true,
+    upgrade : Upgrade.cancel,
+}
+
+var cost = {
+    unit : Unit.cost,
+    structure : Structure.cost,
+    resource : _true,
+    upgrade : Upgrade.cost,
+}
+
+
+
+game.do = function(obj){
+  if (!obj || !obj.type)return true;
+  var f = reserve[obj.type](obj);
+  if (f) actions[obj.type](obj);
+}
 
 game.action = function(obj){
   if (!obj || !obj.type)return;
   return actions[obj.type](obj);
 }
-game.enough = function(obj){
+game.reserve = function(obj){
   if (!obj || !obj.type)return true;
-  return enough[obj.type](obj);
+  return reserve[obj.type](obj);
 }
+game.cancel = function(obj){
+  if (!obj || !obj.type)return true;
+
+    console.log(cancel);
+  return cancel[obj.type](obj);
+}
+game.cost = function(obj){
+  if (!obj || !obj.type)return true;
+  return cost[obj.type](obj);
+}
+
 
 
 export const Game = game;

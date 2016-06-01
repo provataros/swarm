@@ -1,10 +1,9 @@
 import { Template } from 'meteor/templating';
-import {Game} from "/imports/game"
+import {Game} from "/client/imports/game"
 
 Template.upgrade.events({
   "click"(){
     //Meteor.call("queueUpgrade",this.name);
-    Game.action(this);
-    console.log(this);
+    Game.do(this);
   }
 });

@@ -1,3 +1,4 @@
+console.log("persistence");
 import {localdb} from "/client/imports/localdb";
 import {Factory} from "/imports/factory";
 import {Template} from "meteor/templating"
@@ -55,7 +56,7 @@ function hardReset(){
 Meteor.startup(function(){
   Persistence.get();
   Persistence.set();
-  console.log()
+  console.log("start persistence");
 });
 
 

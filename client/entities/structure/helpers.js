@@ -1,27 +1,5 @@
 import {Template } from 'meteor/templating';
-import {Factory} from "/imports/factory";
-import {Game} from "/imports/game"
-import {localdb} from "/client/imports/localdb"
-
-
-localdb.find({}).observe({
-  changed : function(){
-    reselect();
-  }
-});
-
-function reselect(){
-  var f = localdb.findOne();
-  var s = Session.get("selectedStructure");
-  if (s){
-    for (var i=0;i<f.structures.length;i++){
-      if (f.structures[i].name == s.name){
-        s = f.structures[i];
-      }
-    }
-  }
-  Session.set("selectedStructure",s);
-}
+import {State} from "/client/imports/state"
 
 function select(that){
   Session.set("selectedStructure",that);
@@ -33,3 +11,20 @@ Template.structure.events({
     select(this);
   }
 })
+
+Template.structure.helpers({
+  reselect : function(){
+    var s = Session.get("selectedStructure");
+    if (!s)return;
+    if (this.name == s.name){
+      select(this);
+    }
+  },
+})
+
+Template.registerHelper("selectedStructure",function(){
+  var s = Session.get("selectedStructure");
+  if (s){
+    return s;
+  }
+});

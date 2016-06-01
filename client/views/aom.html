@@ -6,9 +6,11 @@
   {{> selectedUnit}}
   {{> showUpgrades}}
   <div id = "bottom-panel">
-    {{#each selectedStructure.units}}
-      {{> unitCreate}}
-    {{/each}}
+    {{#with selectedStructure}}
+      {{#each units}}
+        {{> unitCreate}}
+      {{/each}}
+    {{/with}}
   </div>
   {{> showQueue}}
 </template>
@@ -16,7 +18,6 @@
 
 <template name = "showQueue">
   {{#each queue}}
-    {{debug this}}
-    {{start}}<progress max = 100 id="t{{start}}" value = 0></progress><br>
+    {{obj.name}}<progress max = 100 id="t{{start}}" value = 0></progress><br>
   {{/each}}
 </template>

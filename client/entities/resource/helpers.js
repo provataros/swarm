@@ -1,9 +1,9 @@
 import {Template} from 'meteor/templating';
-import {Game} from "/imports/game"
+import {Game} from "/client/imports/game"
 
 Template.showResources.events({
   "click button"(e){
-    Game.action(this);
+    Game.do(this);
   }
 });
 

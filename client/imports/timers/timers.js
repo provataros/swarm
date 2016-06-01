@@ -1,9 +1,10 @@
-
+console.log("timers");
 import {Persistence} from "/client/imports/persistence"
 import {localdb} from "/client/imports/localdb";
 import {Game} from "/client/imports/game";
 import {Template} from "meteor/templating";
-import {State} from "/client/imports/state";
+import {State} from "/client/imports/state"
+
 
 var callbacks = {};
 var interval = 17;
@@ -112,7 +113,6 @@ function action(q){
 
 Meteor.startup(function(){
   var timers = State().queue;
-  console.log("start timers");
   if (!timers)return;
   for (var i=0;i<timers.length;i++){
     action(timers[i]);
@@ -120,7 +120,7 @@ Meteor.startup(function(){
 });
 
 
-export const Progressbar = {
+export const Timers = {
   register : register,
   run : run
 };

@@ -17,19 +17,35 @@ function sufficientResources(unit){
 
 
 function create(unit){
-  var check = sufficientResources(unit);
-  if (check){
-    localdb.update({},{$push : {units : unit}});
-    localdb.update({},{$inc : check});
-  }
-
-  else{
-    console.log("not enough resources");
-  }
+  localdb.update({},{$push : {units : unit}});
 }
 
-_unit.create = create;
-_unit.enough = sufficientResources;
+function reserve(unit){
+  var check = sufficientResources(unit);
+  if (check){
+    localdb.update({},{$inc : check});
+  }
+  return check;
+}
 
+function refund(obj){
+
+  var check = {};
+
+  for (var i=0;i<obj.cost.length;i++){
+    check["resources."+obj.cost[i].type+".amount"] =  obj.cost[i].amount;
+  }
+
+  localdb.update({},{$inc :check});
+}
+
+function cancel(obj){
+  refund(obj);
+}
+
+
+_unit.create = create;
+_unit.reserve = reserve;
+_unit.cancel = cancel;
 
 export const Unit  = _unit;

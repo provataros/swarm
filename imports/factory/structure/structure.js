@@ -13,6 +13,7 @@ var structures = {
     upgrades : {
       available : [
         Upgrade("barracks"),
+        Upgrade("hp"),
       ]
     },
   },
