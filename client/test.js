@@ -3,9 +3,10 @@ import {localdb} from "./imports/localdb";
 import {Persistence} from "./imports/persistence"
 import {Template} from "meteor/templating";
 import {Timers} from "/client/imports/timers";
+import {UI} from "/client/imports/ui"
 
 Template.registerHelper("player",function(arg){
-  return localdb.findOne();
+  //return UI.findOne();
 })
 
 Template.registerHelper('toArray',function(obj){

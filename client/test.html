@@ -4,16 +4,12 @@
   {{debug player}}
   {{#if online}}
     {{#if currentUser}}
-      {{#with player}}
-        {{> aomView}}
-      {{/with}}
+      {{> aomView}}
     {{else}}
       {{> login}}
     {{/if}}
   {{/if}}
   {{#if offline}}
-    {{#with player}}
-      {{> aomView}}
-    {{/with}}
+    {{> aomView}}
   {{/if}}
 </body>

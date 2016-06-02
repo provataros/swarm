@@ -38,6 +38,7 @@ localdb.find({}).observe({
 
 Template.body.events({
   "click #hardReset" : function(){
+    console.log("reset");
     hardReset();
   }
 });

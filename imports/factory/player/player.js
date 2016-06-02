@@ -14,6 +14,10 @@ var player = {
       structures : [
         Structure("hatchery")
         ,
+      ],
+      units : [
+        Unit("spawn"),
+        Unit("warrior"),
       ]
     }
   }

@@ -1,6 +1,6 @@
 import {Factory} from "/imports/factory"
 import {localdb} from "/client/imports/localdb"
-
+import {UI} from "/client/imports/ui";
 _resource = {};
 
 function sufficientResources(state,unit){
@@ -13,8 +13,7 @@ function sufficientResources(state,unit){
 function gather(unit){
   console.log(unit);
   var tmp = {};
-  tmp["resources."+unit.name+".amount"] = 10;
-    localdb.update({},{$inc : tmp });
+    ui.resources.update({name : unit.name},{$inc : {amount : 50 }});
 }
 
 _resource.gather = gather;

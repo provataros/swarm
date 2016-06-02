@@ -1,7 +1,10 @@
 <template name = "showResources">
-  {{#each resources}}
+  {{#with meat}}
     {{>resource}}
-  {{/each}}
+  {{/with}}
+  {{#with metal}}
+    {{>resource}}
+  {{/with}}
 </template>
 
 <template name = "resource">

@@ -1,5 +1,6 @@
 import {Template} from 'meteor/templating';
-import {Game} from "/client/imports/game"
+import {Game} from "/client/imports/game";
+import {UI} from "/client/imports/ui"
 
 Template.showResources.events({
   "click button"(e){
@@ -8,9 +9,10 @@ Template.showResources.events({
 });
 
 Template.showResources.helpers({
-    "resources"(a){
-      return $.map(this.resources, function(value, index) {
-        return [value];
-      });
-  }
+    meat(a){
+      return UI.resources.findOne({name : "meat"});
+    },
+    metal(){
+      return UI.resources.findOne({name : "metal"});
+    }
 })
