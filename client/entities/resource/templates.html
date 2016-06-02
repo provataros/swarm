@@ -1,11 +1,9 @@
 <template name = "showResources">
-  {{#with meat}}
+  {{#each resources}}
     {{>resource}}
-  {{/with}}
-  {{#with metal}}
-    {{>resource}}
-  {{/with}}
+  {{/each}}
 </template>
+
 
 <template name = "resource">
   <br>

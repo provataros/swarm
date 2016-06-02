@@ -1,6 +1,6 @@
 import {Template} from 'meteor/templating';
 import {Game} from "/client/imports/game";
-import {UI} from "/client/imports/ui"
+import {db} from "/client/imports/localdb";
 
 Template.showResources.events({
   "click button"(e){
@@ -8,11 +8,6 @@ Template.showResources.events({
   }
 });
 
-Template.showResources.helpers({
-    meat(a){
-      return UI.resources.findOne({name : "meat"});
-    },
-    metal(){
-      return UI.resources.findOne({name : "metal"});
-    }
-})
+Template.registerHelper("resources",function(){
+  return db.resources.find({});
+});

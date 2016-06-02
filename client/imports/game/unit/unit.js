@@ -1,5 +1,5 @@
 import {Factory} from "/imports/factory"
-import {localdb} from "/client/imports/localdb"
+import {db} from "/client/imports/localdb"
 
 _unit = {};
 
@@ -7,7 +7,18 @@ _unit = {};
 function sufficientResources(unit){
   var flag = true;
   var check = {};
-  var state = localdb.findOne();
+
+  var cost = [];
+
+  for (var i=0;i<unit.cost.length;i++){
+    cost.push({name : unit.cost[i].type,amount : {"$gt" : unit.cost[i].amount}});
+  }
+  if (cost.length <= 0)return;
+
+  var num = db.resources.update( { $and : cost });
+  console.log(cost);
+  console.log(num.count(),state);
+
   for (var i=0;i<unit.cost.length;i++){
     flag = flag && (state.resources[unit.cost[i].type].amount >=unit.cost[i].amount);
     check["resources."+unit.cost[i].type+".amount"] = - unit.cost[i].amount;

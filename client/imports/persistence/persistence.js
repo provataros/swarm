@@ -1,5 +1,5 @@
 console.log("persistence");
-import {localdb} from "/client/imports/localdb";
+import {db} from "/client/imports/localdb";
 import {Factory} from "/imports/factory";
 import {Template} from "meteor/templating"
 
@@ -17,19 +17,19 @@ function get(){
   } else {
     var state =  Factory.player.default();
   }
-  localdb.importState(state);
+  db.import(state);
 }
 
 function set(){
   if (typeof(Storage) !== "undefined") {
-    var state = JSON.stringify(localdb.exportState());
+    var state = JSON.stringify(db.export());
     localStorage.setItem("state",pako.deflate(state,{ to: 'string' }));
   } else {
       console.log("no storage");
   }
 }
 
-localdb.find({}).observe({
+db.observe({
   changed : function(){
     set();
   }
@@ -49,6 +49,7 @@ function hardReset(){
   delete localStorage.state;
   Session.set("selectedStructure",null);
   Session.set("selectedUnit",null);
+  db.drop();
   Persistence.get();
   Persistence.set();
 }
