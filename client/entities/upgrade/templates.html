@@ -7,7 +7,7 @@
 <template name="showUpgrades">
   {{#with selectedStructure}}
     <div id="upgradelist">
-      {{#each upgrades.available}}
+      {{#each upgrades}}
         {{> upgrade}}
       {{/each}}
     </div>

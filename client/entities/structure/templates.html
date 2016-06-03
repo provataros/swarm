@@ -15,7 +15,6 @@
 
 <template name="structure">
   <div class="structure_icon">
-    {{reselect}}
     {{name}}
   </div>
 </template>
@@ -27,4 +26,12 @@
     {{> structureList}}
   {{/each}}
 </div>
+</template>
+
+<template name="structureUnits">
+  {{#with selectedStructure}}
+    {{#each selectedStructureUnits}}
+      {{> unitCreate}}
+    {{/each}}
+  {{/with}}
 </template>

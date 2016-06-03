@@ -6,11 +6,7 @@
   {{> selectedUnit}}
   {{> showUpgrades}}
   <div id = "bottom-panel">
-    {{#with selectedStructure}}
-      {{#each units}}
-        {{> unitCreate}}
-      {{/each}}
-    {{/with}}
+    {{> structureUnits}}
   </div>
   {{> showQueue}}
 </template>

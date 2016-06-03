@@ -1,35 +1,25 @@
 import {Template } from 'meteor/templating';
-import {State} from "/client/imports/state";
 import {db} from "/client/imports/localdb"
 
-function select(that){
-  Session.set("selectedStructure",that);
-}
 
 Template.structure.events({
   "click" : function(e){
     e.stopPropagation();
-    select(this);
+    Session.set("selectedStructure",this._id);
   }
-})
-
-Template.structure.helpers({
-  reselect : function(){
-    var s = Session.get("selectedStructure");
-    if (!s)return;
-    if (this.name == s.name){
-      select(this);
-    }
-  },
 })
 
 Template.registerHelper("selectedStructure",function(){
-  var s = Session.get("selectedStructure");
-  if (s){
-    return s;
-  }
+  return db.structures.findOne({_id : Session.get("selectedStructure")});
 });
+
 
 Template.registerHelper("structures",function(){
   return db.structures.find({});
 });
+
+Template.structureUnits.helpers({
+  selectedStructureUnits(){
+    return db.base.find({name : {$in : this.units }});
+  }
+})

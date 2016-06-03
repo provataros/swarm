@@ -6,48 +6,40 @@ _unit = {};
 
 function sufficientResources(unit){
   var flag = true;
-  var check = {};
+  var check = [];
+  var cost = unit.cost
 
-  var cost = [];
-
-  for (var i=0;i<unit.cost.length;i++){
-    cost.push({name : unit.cost[i].type,amount : {"$gt" : unit.cost[i].amount}});
+  for (var i=0;i<cost.length;i++){
+    check.push({name : cost[i].type ,amount : {"$gte" : cost[i].amount}});
   }
-  if (cost.length <= 0)return;
+  if (check.length <= 0)return;
 
-  var num = db.resources.update( { $and : cost });
-  console.log(cost);
-  console.log(num.count(),state);
-
-  for (var i=0;i<unit.cost.length;i++){
-    flag = flag && (state.resources[unit.cost[i].type].amount >=unit.cost[i].amount);
-    check["resources."+unit.cost[i].type+".amount"] = - unit.cost[i].amount;
-  }
-  return flag?check:undefined;
+  var num = db.resources.find( { $or : check });
+  return num.count()==cost.length;
 }
 
 
 function create(unit){
-  localdb.update({},{$push : {units : unit}});
+  console.log(unit);
+  delete unit._id;
+  db.units.insert(unit);
 }
 
 function reserve(unit){
   var check = sufficientResources(unit);
   if (check){
-    localdb.update({},{$inc : check});
+    for (var i=0;i<unit.cost.length;i++){
+      db.resources.update({name : unit.cost[i].type},{$inc : { amount : -unit.cost[i].amount }});
+    }
   }
   return check;
 }
 
-function refund(obj){
-
-  var check = {};
-
-  for (var i=0;i<obj.cost.length;i++){
-    check["resources."+obj.cost[i].type+".amount"] =  obj.cost[i].amount;
+function refund(unit){
+  for (var i=0;i<unit.cost.length;i++){
+    db.resources.update({name : unit.cost[i].type},{$inc : { amount : unit.cost[i].amount }});
   }
-
-  localdb.update({},{$inc :check});
+  return true;
 }
 
 function cancel(obj){

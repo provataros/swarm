@@ -8,54 +8,25 @@ localdb.units = new Mongo.Collection(null);
 localdb.structures = new Mongo.Collection(null);
 localdb.upgrades = new Mongo.Collection(null);
 localdb.base = new Mongo.Collection(null);
+localdb.queue = new Mongo.Collection(null);
 localdb._db = new Mongo.Collection(null);
 
-localdb.import = function (state){
+localdb.import = function (name,state){
   var that = this;
-  if (state.resources)$.each(state.resources,function(){
-    that.resources.insert(this);
-  });
-  if (state.units)$.each(state.units,function(){
-    that.units.insert(this);
-  });
-  if (state.structures)$.each(state.structures,function(){
-    that.structures.insert(this);
-  });
-  if (state.upgrades)$.each(state.upgrades,function(){
-    that.upgrades.insert(this);
-  });
-  if (state.base)$.each(state.base,function(){
-    that.base.insert(this);
+  if (state)$.each(state,function(){
+    that[name].insert(this);
   });
 }
 
-localdb.export = function(){
+localdb.export = function(name){
   var state = {};
-  state.resources = this.resources.find({}).fetch();
-  state.units = this.units.find({}).fetch();
-  state.structures = this.structures.find({}).fetch();
-  state.upgrades = this.upgrades.find({}).fetch();
-  state.base = this.base.find({}).fetch();
-  console.log(state);
+  state = this[name].find({},{ fields : {_id : 0 }}).fetch();
   return state;
 }
 
-localdb.observe = function(obs){
-  this.resources.find({}).observe(obs);
-  this.units.find({}).observe(obs);
-  this.structures.find({}).observe(obs);
-  this.upgrades.find({}).observe(obs);
-  this.base.find({}).observe(obs);
-  this._db.find({}).observe(obs);
-}
 
-localdb.drop = function(){
-  this.resources.remove({});
-  this.units.remove({});
-  this.structures.remove({});
-  this.upgrades.remove({});
-  this.base.remove({});
-  this._db.remove({});
+localdb.drop = function(name){
+  this[name].remove({});
 }
 
 localdb.reset = function(){

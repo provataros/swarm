@@ -35,7 +35,7 @@ var units = {
       hp : 120,
       speed : 16,
     },
-    time : 10000,
+    time : 1000000,
   },
   warrior : {
     name : "warrior",

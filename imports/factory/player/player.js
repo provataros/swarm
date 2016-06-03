@@ -9,15 +9,22 @@ var player = {
     return {
       resources : {
         meat : Resource("meat"),
-        metal : Resource("metal")
+        metal : Resource("metal"),
       },
       structures : [
-        Structure("hatchery")
-        ,
+        Structure("hatchery"),
       ],
       units : [
         Unit("spawn"),
         Unit("warrior"),
+      ],
+      base : [
+        Unit("spawn"),
+        Unit("warrior"),
+        Upgrade("barracks"),
+        Upgrade("hp"),
+        Upgrade("hive"),
+        Unit("drone"),
       ]
     }
   }

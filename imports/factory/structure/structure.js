@@ -7,13 +7,13 @@ var structures = {
     type : "structure",
     name : "hatchery",
     units : [
-      Unit("spawn"),
-      Unit("drone")
+      "spawn",
+      "drone",
     ],
     upgrades : {
       available : [
-        Upgrade("barracks"),
-        Upgrade("hp"),
+        "barracks",
+        "hp",
       ]
     },
   },
@@ -21,11 +21,22 @@ var structures = {
     type : "structure",
     name : "barracks",
     units : [
-      Unit("warrior"),
+      "warrior",
     ],
     upgrades : {
       available : [
-        Upgrade("hive"),
+        "hive",
+      ]
+    },
+  },
+  hive : {
+    type : "structure",
+    name : "hive",
+    units : [
+      "warrior",
+    ],
+    upgrades : {
+      available : [
       ]
     },
   }

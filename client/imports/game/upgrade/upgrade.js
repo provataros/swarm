@@ -1,26 +1,20 @@
 import {Factory} from "/imports/factory"
-import {localdb} from "/client/imports/localdb"
-import {State} from "/client/imports/state"
+import {db} from "/client/imports/localdb"
 
 _upgrade = {};
 
 
 function u_structure(up){
-  localdb.update({"structures.upgrades.pending.name" : up.name },{
-    $pull : {"structures.$.upgrades.pending" : {name : up.name} },
-    $push : {"structures" : Factory.structure(up.name) },
+  var f = db.structures.update({"upgrades.pending"  : up.name },{
+    $pull : {"upgrades.pending" : up.name}
   });
+  db.structures.insert(Factory.structure(up.name));
 }
 
 function u_hp(up){
-  var s = []
-  console.log(s.length);
-  for (var i=0;i<State().units.length;i++){
-    s[i] = $.extend({},State().units[i]);
-    s[i].stats.hp += 10;
-  }
-  console.log(s);
-  localdb.update({},{$set : {units  :  s }});
+  var s = [];
+  db.units.update({},{$inc : {"stats.hp" : 10 }},{multi : true});
+  db.base.update({type : "unit"},{$inc : {"stats.hp" : 10 }},{multi : true});
 }
 
 actions = {
@@ -32,31 +26,33 @@ actions = {
 
 //checks done here
 var reserve = function(up){
-  localdb.update({"structures.upgrades.available.name" : up.name },{
-    $pull : {"structures.$.upgrades.available" : {name : up.name} },
-    $push : {"structures.$.upgrades.pending" :   Factory.upgrade(up.name) },
+  var f = db.structures.update({"upgrades.available"  : up.name },{
+    $pull : {"upgrades.available" : up.name},
+    $push : {"upgrades.pending" : up.name},
   });
 }
 
 
 var cancel = function(up){
-  localdb.update({"structures.upgrades.pending.name" : up.name,}, {
-    $pull : {"structures.$.upgrades.pending" : {name : up.name} },
-    $push : {"structures.$.upgrades.available" : Factory.upgrade(up.name) },
+  var f = db.structures.update({"upgrades.pending"  : up.name },{
+    $pull : {"upgrades.pending" : up.name},
+    $push : {"upgrades.available" : up.name},
   });
 }
 
 
-function cost(up){
-  if (!up.cost)return {};
+function cost(unit){
   var flag = true;
-  var check = {};
-  var state = localdb.findOne();
-  for (var i=0;i<up.cost.length;i++){
-    flag = flag && (state.resources[unit.cost[i].type].amount >=unit.cost[i].amount);
-    check["resources."+unit.cost[i].type+".amount"] = - unit.cost[i].amount;
+  var check = [];
+  var cost = unit.cost
+
+  for (var i=0;i<cost.length;i++){
+    check.push({name : cost[i].type ,amount : {"$gte" : cost[i].amount}});
   }
-  return flag?check:undefined;
+  if (check.length <= 0)return;
+
+  var num = db.resources.find( { $or : check });
+  return num.count()==cost.length;
 }
 
 

@@ -3,21 +3,18 @@ import {Persistence} from "/client/imports/persistence"
 import {localdb} from "/client/imports/localdb";
 import {Game} from "/client/imports/game";
 import {Template} from "meteor/templating";
-import {State} from "/client/imports/state"
 
 
 var callbacks = {};
 var interval = 17;
 var running = false;
 var ticker;
-
+var queue = true;
 
 Template.showQueue.events({
   "click progress"(){
     cancel(this);
-    localdb.update({},{
-      $pull : {"queue" : {"start" : this.start} },
-    });
+    db.queue.remove({start : this.start});
   }
 })
 
@@ -90,9 +87,8 @@ function medium(obj){
     end : now + obj.time,
     obj : obj
   };
-  localdb.update({},{$push : {
-    queue : q
-  }});
+
+  db.queue.insert(q);
   action(q);
 }
 
@@ -103,16 +99,19 @@ function action(q){
   },
   function(){
     Game.action(q.obj);
-    localdb.update({},{$pull : {
-      queue : {
-        start : q.start
-      }
-    }});
+    db.queue.remove({start : q.start});
   });
 }
 
 Meteor.startup(function(){
-  var timers = State().queue;
+  var test = {};
+  db.queue.find({}).forEach(function(doc){
+    if (!test[doc.type])test[doc.type]=[];
+    test[doc.type].push(doc);
+    console.log(doc);
+  })
+
+  var timers = db.queue.find({}).fetch();
   if (!timers)return;
   for (var i=0;i<timers.length;i++){
     action(timers[i]);

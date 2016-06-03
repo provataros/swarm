@@ -12,7 +12,7 @@ function sufficientResources(state,unit){
 
 function gather(unit){
   var tmp = {};
-    db.resources.update({name : unit.name},{$inc : {amount : 50 }});
+  db.resources.update({_id : unit._id},{$inc : {amount : 50 }});
 }
 
 _resource.gather = gather;

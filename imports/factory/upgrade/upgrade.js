@@ -3,13 +3,13 @@ var upgrades = {
     type : "upgrade",
     name : "barracks",
     action : "structure",
-    time : 5000,
+    time : 1000,
   },
   hive : {
     type : "upgrade",
     name : "hive",
     action : "structure",
-    time : 15000,
+    time : 1000,
   },
   hp : {
     type : "upgrade",
