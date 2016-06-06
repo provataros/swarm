@@ -22,8 +22,8 @@ var observe = function(name){
 
 var names = [
   "resources",
-  "units",
-  "structures",
+  "unit",
+  "structure",
   "upgrades",
   "base",
   "queue",

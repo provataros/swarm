@@ -14,7 +14,8 @@ var queue = true;
 Template.showQueue.events({
   "click progress"(){
     cancel(this);
-    db.queue.remove({start : this.start});
+    db[this.parent.type].update({_id : this.parent._id},{$pull : {queue : {id : this.id}}});
+    next(this);
   }
 })
 
@@ -40,8 +41,7 @@ function tick(){
 
 
 function cancel(obj){
-  console.log(callbacks[obj.start]);
-  delete callbacks[obj.start];
+  delete callbacks[obj.id];
   Game.cancel(obj.obj);
 }
 
@@ -82,40 +82,90 @@ function medium(obj){
   if (!Game.reserve(obj)){
     return;
   }
-  var q =  {
-    start : now,
-    end : now + obj.time,
-    obj : obj
-  };
 
-  db.queue.insert(q);
-  action(q);
+  var s = Session.get("selectedItem");
+  var q =  {
+    start : null,
+    end : null,
+    obj : obj,
+    id : now,
+    parent : s
+  };
+  db[s.type].update({_id : s._id},{$push : {queue : q}});
+  check(q);
 }
 
-function action(q){
-  register(q.start,q.start,q.end,
+
+
+function check(q){
+  var timers = db[q.parent.type].find({ $and : [ {_id : q.parent._id},{"queue.0" : {$exists : true}}]}).fetch();
+  if (!timers || timers.length == 0){
+    return;
+  }
+  if (timers[0].queue[0].id == q.id){
+    action(timers[0].queue[0],timers[0]);
+  }
+}
+
+function action(q,s,p){
+  var start = q.start?q.start:Date.now();
+  var end = q.end?q.end:start + q.obj.time;
+  q.start = start;
+  q.end = end;
+  db[s.type].update({_id : s._id}, {$set : {"queue.0.start" : q.start,"queue.0.end" : q.end}});
+  register(q.id,q.start,q.end,
   function(f){
-    $("#t"+q.start).val(f);
+    $("#t"+q.id).val(f);
   },
   function(){
     Game.action(q.obj);
-    db.queue.remove({start : q.start});
+    db[s.type].update({_id : s._id},{$pull : {queue : {id : q.id}}});
+    next(q);
   });
 }
 
-Meteor.startup(function(){
-  var test = {};
-  db.queue.find({}).forEach(function(doc){
-    if (!test[doc.type])test[doc.type]=[];
-    test[doc.type].push(doc);
-    console.log(doc);
-  })
-
-  var timers = db.queue.find({}).fetch();
-  if (!timers)return;
-  for (var i=0;i<timers.length;i++){
-    action(timers[i]);
+function next(q){
+  var timers = db[q.parent.type].find({ $and : [ {_id : q.parent._id},{"queue.0" : {$exists : true}}]}).fetch();
+  if (!timers || timers.length == 0){
+    return;
   }
+  action(timers[0].queue[0],timers[0]);
+}
+
+
+function startall(){
+  var timers = $.merge(
+    db.unit.find({"queue.0" : {$exists : true}}).fetch(),
+    db.structure.find({"queue.0" : {$exists : true}}).fetch(),
+  );
+  if (!timers){
+    return;
+  }
+  for (var i=0;i<timers.length;i++){
+    var end = 0;
+    var start = 0;
+    for (var j=0;j<timers[i].queue.length;j++){
+      var q = timers[i].queue[j];
+      var s = q.parent;
+      start = q.start?q.start:end;
+      end = q.end?q.end:end+q.obj.time;
+      var diff = Date.now()-end;
+      if (diff >0){
+        Game.action(q.obj);
+        db[s.type].update({_id : s._id},{$pull : {queue : {id : q.id}}});
+      }
+      else{
+        timers[i].queue[j].start = start;
+        timers[i].queue[j].end = end;
+        action(timers[i].queue[j],timers[i]);
+        break;
+      }
+    }
+  }
+}
+
+Meteor.startup(function(){
+  startall();
 });
 
 

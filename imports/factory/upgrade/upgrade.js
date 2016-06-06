@@ -17,6 +17,18 @@ var upgrades = {
     action : "hp",
     time : 1000,
   },
+  hp2 : {
+    type : "upgrade",
+    name : "hp2",
+    action : "hp2",
+    time : 1000,
+    cost : [
+      {
+        type : "meat",
+        amount : 10
+      },
+    ],
+  },
 }
 
 

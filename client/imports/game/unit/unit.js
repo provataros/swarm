@@ -20,9 +20,8 @@ function sufficientResources(unit){
 
 
 function create(unit){
-  console.log(unit);
   delete unit._id;
-  db.units.insert(unit);
+  db.unit.insert(unit);
 }
 
 function reserve(unit){

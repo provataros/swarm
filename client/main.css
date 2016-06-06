@@ -56,3 +56,12 @@ body,html{
   display : table-cell;
   vertical-align: middle;
 }
+
+.notenough{
+  opacity: 0.4 !important;
+}
+.createspawn{
+
+  opacity: 1;
+  background-image : url("images/icon.png");
+}

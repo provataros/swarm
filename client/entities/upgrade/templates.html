@@ -5,7 +5,7 @@
 </template>
 
 <template name="showUpgrades">
-  {{#with selectedStructure}}
+  {{#with selectedItem}}
     <div id="upgradelist">
       {{#each upgrades}}
         {{> upgrade}}
@@ -16,7 +16,7 @@
 </template>
 
 <template name="upgrade">
-  <div class="upgrade_icon">
+  <div class="{{enoughResources}} upgrade_icon">
     {{name}}
   </div>
 </template>

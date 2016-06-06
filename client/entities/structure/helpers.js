@@ -5,17 +5,17 @@ import {db} from "/client/imports/localdb"
 Template.structure.events({
   "click" : function(e){
     e.stopPropagation();
-    Session.set("selectedStructure",this._id);
+    Session.set("selectedItem",this);
   }
 })
 
 Template.registerHelper("selectedStructure",function(){
-  return db.structures.findOne({_id : Session.get("selectedStructure")});
+  return db.structure.findOne({_id : Session.get("selectedItem")._id});
 });
 
 
 Template.registerHelper("structures",function(){
-  return db.structures.find({});
+  return db.structure.find({});
 });
 
 Template.structureUnits.helpers({

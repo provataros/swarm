@@ -12,6 +12,11 @@ var units = {
         amount : 5
       }
     ],
+    upgrades : {
+      available : [
+        "hp2",
+      ]
+    },
     stats : {
       hp : 10,
       speed : 5,
@@ -35,7 +40,7 @@ var units = {
       hp : 120,
       speed : 16,
     },
-    time : 1000000,
+    time : 10000,
   },
   warrior : {
     name : "warrior",

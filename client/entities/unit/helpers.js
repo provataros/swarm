@@ -12,14 +12,14 @@ Template.unitCreate.events({
 Template.unitList.events({
   "click" : function(e){
     e.stopPropagation();
-    Session.set("selectedUnit",this._id);
+    Session.set("selectedItem",this);
   }
 });
 
 Template.registerHelper("selectedUnit",function(){
-  return db.units.findOne({_id : Session.get("selectedUnit")});
+  return db.unit.findOne({_id : Session.get("selectedItem")._id});
 });
 
 Template.registerHelper("units",function(){
-  return db.units.find({});
+  return db.unit.find({});
 });

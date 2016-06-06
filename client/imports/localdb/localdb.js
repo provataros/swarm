@@ -4,8 +4,8 @@ import {Mongo} from "meteor/mongo";
 var localdb = {};
 
 localdb.resources = new Mongo.Collection(null);
-localdb.units = new Mongo.Collection(null);
-localdb.structures = new Mongo.Collection(null);
+localdb.unit = new Mongo.Collection(null);
+localdb.structure = new Mongo.Collection(null);
 localdb.upgrades = new Mongo.Collection(null);
 localdb.base = new Mongo.Collection(null);
 localdb.queue = new Mongo.Collection(null);
@@ -20,7 +20,7 @@ localdb.import = function (name,state){
 
 localdb.export = function(name){
   var state = {};
-  state = this[name].find({},{ fields : {_id : 0 }}).fetch();
+  state = this[name].find({}).fetch();
   return state;
 }
 

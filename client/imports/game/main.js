@@ -62,8 +62,6 @@ game.reserve = function(obj){
 }
 game.cancel = function(obj){
   if (!obj || !obj.type)return true;
-
-    console.log(cancel);
   return cancel[obj.type](obj);
 }
 game.cost = function(obj){
