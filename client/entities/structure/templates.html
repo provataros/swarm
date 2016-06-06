@@ -1,9 +1,9 @@
 <template name = "structureCreate">
-  <button class = "createBtn create{{name}}">{{name}}</button>
+  <button class = "createBtn create{{name}}"></button>
 </template>
 
 <template name = "structureList">
-  <div class = "structure structure_{{name}}"></div>
+  <div class = "structure structure_{{name}} icon_{{name}} icon"></div>
 </template>
 
 
@@ -14,10 +14,11 @@
 </template>
 
 <template name="structure">
-  <div class="structure_icon">
-    {{name}}
+  <div class="structure_icon icon_{{name}} icon">
   </div>
 </template>
+
+
 
 
 <template name="listStructures">

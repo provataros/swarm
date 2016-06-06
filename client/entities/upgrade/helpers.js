@@ -8,6 +8,14 @@ Template.upgrade.events({
     //Meteor.call("queueUpgrade",this.name);
     this.parent = Session.get("selectedItem");
     Game.do(this);
+  },
+  "mouseenter" : function(e){
+    e.stopPropagation();
+    Session.set("hoverItem",this);
+  },
+  "mouseleave" : function(e){
+    e.stopPropagation();
+    Session.set("hoverItem",null);
   }
 });
 

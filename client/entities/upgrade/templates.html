@@ -1,7 +1,7 @@
 
 
 <template name = "upgradeList">
-  <div class = "upgrade upgrade_{{name}}"></div>
+  <div class = "upgrade upgrade_{{name}} icon_{{name}} icon"></div>
 </template>
 
 <template name="showUpgrades">
@@ -16,7 +16,6 @@
 </template>
 
 <template name="upgrade">
-  <div class="{{enoughResources}} upgrade_icon">
-    {{name}}
+  <div class="{{enoughResources}} upgrade_icon icon_{{name}} icon">
   </div>
 </template>

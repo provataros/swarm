@@ -1,9 +1,9 @@
 <template name = "unitCreate">
-  <button class = "createBtn {{enoughResources}} create{{name}}">{{name}}</button>
+  <button class = "createBtn {{enoughResources}} create{{name}} icon_{{name}} icon"></button>
 </template>
 
 <template name = "unitList">
-  <div class = "unit unit_{{name}}"></div>
+  <div class = "unit unit_{{name}} icon_{{name}} icon"></div>
 </template>
 
 
@@ -23,7 +23,7 @@
 
 <template name = "selectedUnit">
   {{#with selectedUnit}}
-    Name : {{name}}<br>
+    Name : {{static.title}}<br>
     HP : {{stats.hp}}<br>
     Speed : {{stats.speed}}<br>
   {{/with}}

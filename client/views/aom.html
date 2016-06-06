@@ -3,19 +3,59 @@
   {{> showResources}}
   {{> showStructures}}
   {{> listUnits}}
-  {{> selectedUnit}}
-  {{> showUpgrades}}
-  <div id = "bottom-panel">
-    {{> structureUnits}}
-  </div>
-  {{> showQueue}}
+  {{> bottom_panel}}
 </template>
 
 
 <template name = "showQueue">
   {{#with selectedItem}}
-    {{#each queue}}
-      {{obj.name}}<progress max = 100 id="t{{id}}" value = 0></progress><br>
+    {{#with first_queue}}
+      {{static obj}}<progress max = 100 id="t{{id}}" value = 0></progress><br>
+    {{/with}}
+    {{#each rest_queue}}
+      {{static obj}}
     {{/each}}
   {{/with}}
+</template>
+
+<template name = "bottom_panel">
+  <div id = "bottom">
+    <div id = "hover-panel">
+      {{#with hoverItem}}
+        {{static.desc}}
+      {{/with}}
+    </div>
+    <div id = "bottom-panel">
+      <div id = "desc-panel">
+        {{#with selectedItem}}
+          {{static.desc}}
+        {{/with}}
+      </div>
+      <div id = "item-panel">
+        <div id = "item-image">
+          {{#with selectedItem}}
+            {{> itemImage}}
+          {{/with}}
+        </div>
+        <div id = "item-status">
+          {{#if isQueue}}
+            {{> showQueue}}
+          {{else}}
+            {{> selectedUnit}}
+            {{static selectedItem}}
+          {{/if}}
+        </div>
+        <div id = "item-misc">
+        </div>
+      </div>
+      <div id = "action-panel">
+        {{> structureUnits}}
+        {{> showUpgrades}}
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name = "itemImage">
+  <div class = "item-image"></div>
 </template>
