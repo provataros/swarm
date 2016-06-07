@@ -1,15 +1,15 @@
 var items = {
   spawn : {
     title : "Spawn",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Larva tending to the hive",
   },
   drone : {
     title : "Drone",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Scout used for meat gathering",
   },
   warrior : {
     title : "Warrior",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Unit adept at combat",
   }
 
 }

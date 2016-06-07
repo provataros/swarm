@@ -58,3 +58,11 @@ body,html{
 .notenough{
   opacity: 0.4 !important;
 }
+.notenoughresource{
+  color : red;
+  display : inline-block;
+}
+.enoughresource{
+  color : inherit;
+  display : inline-block;
+}

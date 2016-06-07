@@ -12,7 +12,7 @@ var ticker;
 var queue = true;
 
 Template.showQueue.events({
-  "click progress"(){
+  "click"(){
     cancel(this);
     db[this.parent.type].update({_id : this.parent._id},{$pull : {queue : {id : this.id}}});
     next(this);

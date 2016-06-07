@@ -1,22 +1,22 @@
 var items = {
   hp : {
     title : "Global HP buff",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Increases all unit's HP by 10",
     icon : "hp.png"
   },
   barracks : {
     title : "Barracks",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Allows the creationg of barracks",
     icon : "barracks.png"
   },
   hp2 : {
-    title : "Unit HP Buff",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    title : "HP Buff",
+    desc : "Increases this unit's HP by 10",
     icon : "hp.png"
   },
   hive : {
     title : "Hive",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Allows the creation of another hive",
     icon : "hive.png"
   }
 }

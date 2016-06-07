@@ -1,17 +1,17 @@
 var items = {
   hatchery : {
     title : "Hatchery",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Basic structure for spawing spawns and drones",
     icon : "hatchery.png"
   },
   barracks : {
     title : "Barracks",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Military buildng for warriors",
     icon : "barracks.png"
   },
   hive : {
     title : "Hive",
-    desc : "Unholy spawn of something, this unit is the motherfucker of things",
+    desc : "Advanced spawning grounds",
     icon : "hive.png"
   }
 

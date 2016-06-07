@@ -2,6 +2,8 @@ import {Template } from 'meteor/templating';
 import {Factory} from "/imports/factory";
 import {Game} from "/client/imports/game";
 import {db} from "/client/imports/localdb";
+import {Helpers} from "/client/imports/helpers"
+
 
 Template.unitCreate.events({
   "click button"(){
@@ -9,33 +11,32 @@ Template.unitCreate.events({
   },
   "mouseenter" : function(e){
     e.stopPropagation();
-    Session.set("hoverItem",this);
+    Helpers.hover(this);
   },
   "mouseleave" : function(e){
     e.stopPropagation();
-    Session.set("hoverItem",null);
+    Helpers.unhover(this);
   }
 });
 
 Template.unitList.events({
   "click" : function(e){
     e.stopPropagation();
-    Session.set("selectedItem",this);
+    if (e.ctrlKey){
+      Helpers.deselectSingle();
+      Helpers.toggleMulti(this);
+    }
+    else{
+      Helpers.deselectMulti();
+      Helpers.selectSingle(this);
+    }
   },
   "mouseenter" : function(e){
     e.stopPropagation();
-    Session.set("hoverItem",this);
+    Helpers.hover(this);
   },
   "mouseleave" : function(e){
     e.stopPropagation();
-    Session.set("hoverItem",null);
-  }
-});
-
-Template.registerHelper("selectedUnit",function(){
-  return db.unit.findOne({_id : Session.get("selectedItem")._id});
-});
-
-Template.registerHelper("units",function(){
-  return db.unit.find({});
+    Helpers.unhover();
+  },
 });

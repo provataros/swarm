@@ -1,22 +1,22 @@
-.icon_spawn{
+.icon_spawn-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Seal.jpg");
 }
-.icon_drone{
+.icon_drone-{
     background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Mount_NightmareHorse.jpg");
 }
-.icon_warrior{
+.icon_warrior-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Warrior_BattleShout.jpg");
 }
-.icon_hive{
+.icon_hive-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Warrior_Charge.jpg");
 }
-.icon_barracks{
+.icon_barracks-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_UpgradeMoonGlaive.jpg");
 }
-.icon_hatchery{
+.icon_hatchery-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Mount_JungleTiger.jpg");
 }
-.icon_hp,.icon_hp2{
+.icon_hp-,.icon_hp2-{
   background-image : url("/images/icons/Abilities/Abilities/CommandButtons/BTNAbility_Druid_Enrage.jpg");
 }
 
