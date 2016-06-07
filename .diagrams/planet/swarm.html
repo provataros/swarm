@@ -1,0 +1,69 @@
+<head>
+  <title>swarm</title>
+</head>
+
+<body>
+
+
+  {{#if loggedIn }}
+    {{> info}}
+    <div id = "controls2">
+      <i id = "showPanel" class = "fa fa-external-link"></i>
+    </div>
+    <div id = "wrapper">
+      <div id = "panel">
+        <i id = "closePanel" class = "fa fa-times"></i>
+        <input id = "per" type="number" step="any" value = "0.5"/>
+        <input id = "scale" type="number" step="any" value = "0.006"/>
+        <h1 id = "header">Welcome to Swarm!</h1>
+        {{> controls}}
+        <br>
+        <div id="parentdiv">
+          <div id="planetdiv" class="listdiv">
+            <ul class = "entityList">
+              <h3 id = "planetHeader">Planets</h3>
+              {{#each planetEntries}}
+                {{> planetEntry}}
+              {{/each}}
+            </ul>
+          </div>
+          <div id="systemdiv" class="listdiv">
+            <ul class = "entityList">
+              <h3 id = "systemHeader">Systems</h3>
+              {{#each systemEntries}}
+                {{> systemEntry}}
+              {{/each}}
+            </ul>
+          </div>
+          <div id="playerdiv" class="listdiv">
+            <ul class = "entityList">
+              <h3 id = "playerHeader">Players</h3>
+              {{#each playerEntries}}
+                {{> playerEntry}}
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div id="interface">
+          {{#if isPlanet}}
+            {{#with planetEntity}}
+              {{> planet}}
+            {{/with}}
+          {{else}} {{#if isPlayer}}
+            {{#with playerEntity}}
+              {{> player}}
+            {{/with}}
+          {{else}}
+
+          {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div id = "game">
+      <div id = "display"></div>
+    </div>
+  {{else}}
+    {{> login}}
+  {{/if}}
+</body>

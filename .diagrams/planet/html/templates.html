@@ -1,0 +1,48 @@
+<template name="controls">
+  <button id="createPlanet" class = "createEntity">Create Planet</button>
+  <input type = "text" id="input">
+  <button id="createSystem" class = "createEntity">Create System</button>
+  <button id="createPlayer" class = "createEntity">Create Player</button>
+</template>
+
+<template name="planetEntry">
+  <li class="planetname">{{name}}</li>
+</template>
+
+<template name="systemEntry">
+  <li class="systemname">{{name}}</li>
+</template>
+
+<template name="playerEntry">
+  <li class="playername">{{name}}</li>
+</template>
+
+<template name="planet">
+  <h3>Planet Name: {{name}}</h3>
+  <ul>
+    <li>ID: {{_id}}</li>
+    {{#if player}}
+      <li>player ID: {{player}}</li>
+      <li>player name : {{player_name}}</li>
+    {{/if}}
+    Size: {{size}}
+    <br>
+    Moons: {{moons}}
+    {{#if habited}}
+      <li>Camps</li>
+      <ul class = "unitlist">
+        {{#each camps}}
+          {{> camp}}
+        {{/each}}
+      </ul>
+    {{else}}
+      <li>uninhabited</li>
+    {{/if}}
+    <li>Resources</li>
+    <ul class = "unitlist">
+      {{#each resources}}
+        {{> resource}}
+      {{/each}}
+    </ul>
+  </ul>
+</template>

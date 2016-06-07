@@ -1,0 +1,158 @@
+/* CSS declarations go here */
+html, body{
+  color : black;
+  padding : 0px;
+  margin : 0px;
+  width : 100%;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: black;
+  z-index: -4;
+}
+
+#display{
+  width : 100%;
+  height : 100%;
+  position : absolute;
+  left : 0px;
+  top : 0px;
+  z-index: 0;
+  margin : 0px;
+  padding : 0px;
+  overflow :hidden;
+}
+
+#renderer{
+  margin: 0px;
+  padding: 0px;
+}
+
+#fpscounter{
+  margin: 0px;
+  padding: 0px;
+  position : absolute;
+  top : 0px;
+  right : 0px;
+}
+
+.entityList{
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+
+#planetdiv{
+  /*background-color: lightblue;*/
+  text-align: left;
+}
+#playerdiv{
+  /*background-color: lightpink;*/
+  text-align: right;
+}
+#systemdiv{
+  text-align: center;
+}
+
+.listdiv{
+  float:left;
+  width:33%;
+}
+
+#parentdiv{
+  width:100%;
+
+}
+
+button{
+  color : black;
+}
+li{
+  margin-left: 2px;
+  padding-left: 2px;
+}
+
+
+#interface{
+  width : 100%;
+  position : absolute;
+  /*background-color : lightgreen;*/
+  padding : 0px;
+  margin : 0px;
+  bottom : 0px;
+}
+
+.unitlist{
+  text-align: left;
+}
+
+#showPanel{
+  color: white;
+  font-size: 20px;
+  position : absolute;
+  right : 0px;
+  margin: 10px;
+}
+
+#closePanel{
+  color: black;
+  font-size: 20px;
+  position : absolute;
+  right : 0px;
+  top: 0px;
+  margin: 10px;
+}
+
+
+#panel{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #C1CAC3;
+  background-color: rgba(255,255,255,0.3);
+  overflow: hidden;
+  box-sizing: border-box;
+  padding : 35px;
+  color: black;
+  display : none;
+}
+
+#map{
+  position : absolute;
+  bottom : 10px;
+  width : 750px;
+  height : 750px;
+  background-color: pink;
+}
+#wrapper{
+  padding: 50px;
+  width: 100%;
+  height: 100%;
+  z-index : 10;
+}
+
+#wrapper{
+  z-index : -1;
+  position: absolute;
+  top : 0px;
+  width: 100%;
+  height : 100%;
+  left : 0px;
+}
+#controls2{
+  z-index : -1;
+  position: absolute;
+  top : 0px;
+  width: 100%;
+  left : 0px;
+}
+#game{
+  z-index : -3;
+  position: absolute;
+  top : 0px;
+  width: 100%;
+  height : 100%;
+  left : 0px;
+}

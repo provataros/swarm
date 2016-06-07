@@ -1,0 +1,107 @@
+
+#queen{
+  width: 125px;
+  height: 125px;
+  float: left;
+  background-image: url("./queen.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+html,body{
+    overflow:hidden;
+    height:100%;
+    background-color: black;
+    color: white;
+    position: relative;
+}
+#main-controls{
+  position: relative;
+}
+
+input {
+  color : black;
+}
+progress {
+  width : 1000px;
+}
+.visible-controls-row{
+  float: left;
+  width: calc(100% - 125px);
+  height : 125px;
+  position: relative;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.visible-control-button{
+  width: 10%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  padding: 0px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+.visible-controls-row > div{
+  position : absolute;
+  height: 50px;
+  width: 100%;
+  bottom : 0px;
+}
+
+#expanded-controls{
+  height: calc(100% - 125px);
+  background-color: lightgreen;
+  background-color: rgba(255,255,255,0.1);
+  width: 100%;
+}
+.clearfix{
+  clear: both;
+}
+#controls{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top : calc(100% - 125px);
+}
+button{
+  background-color: black;
+}
+
+.unit_button{
+  width : 50px;
+  height : 50px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-width: 1px;
+  display : inline-block;
+}
+
+.resource_button{
+  width : 25px;
+  height : 25px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-width: 1px;
+  display : inline-block;
+  box-sizing: border-box;
+}
+
+.placeholder{
+  display : inline-block;
+  text-align: center;
+}
+
+
+#drone_button{
+  background-image: url("drone.png");
+}
+#expand_hive_button{
+  background-image: url("hive.png");
+}
+#meat_icon{
+  background-image: url("meat.png");
+}

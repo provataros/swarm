@@ -1,0 +1,16 @@
+<template name="info">
+
+
+  <button name = "spawn" class="create_btn">Spawn</button>
+  <button name = "drone" class="create_btn">drone</button>
+  <button name = "queen" class="create_btn">queen</button>
+  <button name = "nest" class="build_btn">nest</button>
+
+    {{#each units}}
+      <div class="white">{{> unit}}</div>
+    {{/each}}
+</template>
+
+<template name = "unit">
+  {{name}}
+</template>
