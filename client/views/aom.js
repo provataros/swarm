@@ -9,9 +9,6 @@ Session.set("selectedItems",{_sel : []});
 
 
 
-console.log(Render);
-
-
 
 $(document).keyup(function(e) {
   if (e.keyCode === 27) Session.set("selectedItems",{_sel : []});   // esc
