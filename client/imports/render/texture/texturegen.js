@@ -125,33 +125,53 @@ function rescaleValue(val,min,max){
   return (((val - min) * (255 - 0)) / (max - min)) + 0;;
 }
 
+
+var thresh = (256*256)*4;
+
 function encodeMap(name,map){
   //console.log(map);
   var s = "";
-  for (var i=0;i<map.length;i++){
-    s += String.fromCharCode(map[i]);
+  var l = map.length/thresh;
+  console.log("initial "+map.length);
+  var size = 0;
+  var cc = [];
+  for (var i=0;i<l;i++){
+    s = new Uint8Array(thresh);
+    for (var j=0;j<thresh;j++){
+      var k = i*(thresh)+j;
+      s[j] = map[k];
+    }
+    cc[i] = s;
   }
-  console.log(map.length);
-  var s = pako.deflate(s,{raw : true, to : "string"});
-  console.log(s.length);
-  localStorage.setItem(name,s);
+  for (var i=0;i<cc.length;i++){
+    var t = pako.deflate(cc[i],{raw : true,to : "string"});
+    size += t.length;
+    localStorage.setItem(name+i,t);
+  }
+  console.log("final " + size);
 }
 
 function decodeMap(name,type){
-  var t = localStorage.getItem(name);
-  if (t){
-    console.log(t.length);
-    t = pako.inflate(t,{raw : true ,to : "string"});
-    console.log(t.length);
-    var arr = new type(t.length);
-    for (var i=0;i<t.length;i++){
-      console.log(t[i]);
-      arr[i] = t[i].charCodeAt();
-    }
-    console.log(t[i]);
-    return arr;
+  var i=0;
+  var tt = [];
+  var size = 0;
+  while(true){
+    var t = localStorage.getItem(name+i);
+    if (!t)break;
+    i++;
+    var u = pako.inflate(t,{raw : true});
+    tt.push(u);
   }
-  return null;
+  if (i==0)return null;
+  var ss = [];
+  var arr = new type(i*thresh);
+  for (var i=0;i<tt.length;i++){
+    for (var j=0;j<tt[i].length;j++){
+      arr[i*(thresh)+j] = tt[i][j];
+    }
+  }
+  //return null;
+  return arr;
 }
 
 /*
@@ -166,6 +186,7 @@ function generateTextureFull(noiseWidth,noiseHeight,rnd,temp){
   var cm = decodeMap("texture",Uint8Array);
   var nm = null;
   if (cm){
+    console.log("SADfsdf");
     return {noise : nm,color:cm};
   }
   else{

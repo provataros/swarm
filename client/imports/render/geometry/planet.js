@@ -75,7 +75,6 @@ function createRenderer(){
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.domElement.id = "renderer";
 	var displ = $("#display");
-	console.log(displ);
 	displ.empty();
 	displ.append(renderer.domElement);
 	return renderer;
@@ -113,14 +112,18 @@ function saveMap(map){
 }
 
 function showPlanet(p){
-	createRenderer();
+	var renderer = createRenderer();
 	var scene = createScene();
 	var camera = createCamera();
+
+
+
 
 	scene.add( camera );
 
 	var geometry   = new THREE.SphereGeometry(100,32,32);
 	THREE.ImageUtils.crossOrigin = '';
+
 
 
 
@@ -134,8 +137,6 @@ function showPlanet(p){
   var sss = Date.now();
   map = Texture.full(size,size/2,rnd);
   console.log(Date.now()-sss);
-  saveMap(map);
-  console.log(map);
 
 	var material = new THREE.MeshPhongMaterial();
 	material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
@@ -155,8 +156,8 @@ function showPlanet(p){
 
 	geometry = new THREE.Geometry();
   geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-  geometry.vertices.push(new THREE.Vector3(50, 50, 50));
-
+  geometry.vertices.push(new THREE.Vector3(850, 850, 850));
+  geometry.dynamic = true;
 	var line = new THREE.Line(geometry, material);
 
   p.add(line);
@@ -168,6 +169,25 @@ function showPlanet(p){
 	//scene.add( directionalLight );
 	light = new THREE.AmbientLight( 0xffffff, 1, 0 );
 	scene.add( light );
+
+
+
+
+  var raycaster = new THREE.Raycaster(); // create once
+  var mouse = new THREE.Vector3(); // create once
+
+
+  $("#renderer").on("mousemove",function(e){
+    mouse.x = ( e.clientX / $(this).width() ) * 2 - 1;
+    mouse.y = - ( e.clientY / $(this).height() ) * 2 + 1;
+    mouse.z = 1;
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObject( p , true );
+    if (intersects.length > 0){
+      line.geometry.vertices[1] = intersects[0].point.multiplyScalar(1.5);
+      line.geometry.verticesNeedUpdate = true;
+    }
+  });
 
 	updateRender(renderer,scene,camera,[p]);
 
