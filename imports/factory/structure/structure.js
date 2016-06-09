@@ -43,8 +43,10 @@ var structures = {
 }
 
 
-var structure = function(name){
-  return structures[name]?structures[name]:{};
+var structure = function(name,owner){
+  var u = structures[name]?structures[name]:{};
+  u.owner = owner;
+  return $.extend({},u);
 }
 
 structure.exists = function(name){

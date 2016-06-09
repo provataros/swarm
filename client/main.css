@@ -12,8 +12,6 @@ body,html{
   background-color: #ddd;
 }
 #map{
-  display : none;
-  background-image : url("/images/download.png");
 }
 #renderer{
   width : 100px !important;

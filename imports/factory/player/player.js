@@ -12,20 +12,36 @@ var player = {
         metal : Resource("metal"),
       },
       structure : [
-        Structure("hatchery"),
+        Structure("hatchery","player"),
+        Structure("barracks","ai_1"),
       ],
       unit : [
-        Unit("spawn"),
-        Unit("warrior"),
+        Unit("spawn","player"),
+        Unit("warrior","player"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
+        Unit("spawn","ai_1"),
       ],
       base : [
-        Unit("spawn"),
-        Unit("warrior"),
+        Unit("spawn",null),
+        Unit("warrior",null),
         Upgrade("barracks"),
         Upgrade("hp"),
         Upgrade("hp2"),
         Upgrade("hive"),
-        Unit("drone"),
+        Unit("drone",null),
+      ],
+      camp : [
+        {
+          name : "player",
+        },
+        {
+          name : "ai_1"
+        }
       ]
     }
   }

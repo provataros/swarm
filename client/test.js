@@ -12,6 +12,6 @@ Template.body.rendered = function () {
 
 Template.body.events({
   "click"(){
-      Geometry.showPlanet({_id : Math.random()});
+      //Geometry.showPlanet({_id : Math.random()});
   }
 })

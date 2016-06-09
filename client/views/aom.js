@@ -6,7 +6,7 @@ import {Render} from "/client/imports/render";
 
 Session.set("selectedItem",{_id : 0});
 Session.set("selectedItems",{_sel : []});
-
+Session.set("selectedCamp","player");
 
 
 
@@ -98,4 +98,3 @@ Template.registerHelper("isSelected",function(){
 Template.registerHelper("hasSelected",function(){
   return Session.get("selectedItems")._sel.length >0;
 });
-//info@forthnet.gr

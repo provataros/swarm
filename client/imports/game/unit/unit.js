@@ -21,7 +21,9 @@ function sufficientResources(unit){
 
 function create(unit){
   delete unit._id;
+  unit.owner = Session.get("selectedCamp");
   db.unit.insert(unit);
+
 }
 
 function reserve(unit){

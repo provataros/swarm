@@ -92,29 +92,53 @@ function createCamera(){
 	return camera;
 }
 
+var save = true;
+var pako = require("pako");
+
+function getMap(){
+  if (save && localStorage.getItem("texture")){
+    return null;
+    return pako.inflate(localStorage.getItem("texture"));
+  }
+  else{
+    return null;
+  }
+}
+
+function saveMap(map){
+  if (save && !localStorage.getItem("texture")){
+    //console.log(pako.deflate(map));
+    //localStorage.setItem("texture",pako.deflate(map));
+  }
+}
+
 function showPlanet(p){
 	createRenderer();
 	var scene = createScene();
 	var camera = createCamera();
+
 	scene.add( camera );
-
-
-
-
 
 	var geometry   = new THREE.SphereGeometry(100,32,32);
 	THREE.ImageUtils.crossOrigin = '';
 
 
 
-	var size = 512;
+	var size = 1024;
 
 	var rnd = new Math.seedrandom(p._id);
-	var noiseMap = Texture.map(size,size/2,rnd);
-	var texture = Texture.color(size,size/2,noiseMap);
+
+
+	var map = getMap();
+
+  var sss = Date.now();
+  map = Texture.full(size,size/2,rnd);
+  console.log(Date.now()-sss);
+  saveMap(map);
+  console.log(map);
 
 	var material = new THREE.MeshPhongMaterial();
-	material.map = new THREE.DataTexture(texture,size,size/2,THREE.RGBAFormat);
+	material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
 
 	material.map.needsUpdate = true;
 
@@ -161,8 +185,8 @@ function createAndTexturePlanet(p,d){
 	var radius = rng.number(t.min_radius,t.max_radius,rnd);
 
 	var size = 64;
-	var noiseMap = Texture.map(size,size/2,new Math.seedrandom(p));
-	var texture = Texture.color(size,size/2,noiseMap);
+
+	var map = Texture.full(size,size/2,rnd);
 
 
 	var p = new THREE.Object3D();
@@ -170,7 +194,7 @@ function createAndTexturePlanet(p,d){
 
 	var material = new THREE.MeshPhongMaterial();
 
-	material.map = new THREE.DataTexture(texture,size,size/2,THREE.RGBAFormat);
+	material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
 	material.map.needsUpdate = true;
 	var m = new THREE.Mesh(g, material);
 	if (d>0)m.position.x += d+20;

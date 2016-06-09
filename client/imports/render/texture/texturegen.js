@@ -30,7 +30,7 @@ function sumOctave(num_iterations, x, y,z, persistence, scale, low, high,simplex
 				noise += simplex.noise2D(x * freq, y * freq) * amp;
 			}
 			else {
-				noise += simplex.noise3D(x * freq, y * freq,z*freq) * amp;
+				noise += simplex.noise3D(x * freq, y * freq, z * freq) * amp;
 			}
       maxAmp += amp;
       amp *= persistence;
@@ -69,19 +69,15 @@ function generateTextureColor(w,h,map){
       var last = 0;
       var curr;
       var r;
-      /*for (r = 0;r<earthColorMap.length;r++){
-        if (n<=earthColorMap[r].range){
-          curr = earthColorMap[r].range;
-          break;
-        }
-        last =  earthColorMap[r].range;
-      }
-      if (r>=earthColorMap.length)r=earthColorMap.length-1;*/
+
+
       var p = (n-last)/(curr-last);
+
       //console.log(r,n);
       /*var red = earthColorMap[r].b[0] * p + earthColorMap[r].a[0] *  (1 - p);
       var green = earthColorMap[r].b[1] * p + earthColorMap[r].a[1] *  (1 - p);
       var blue = earthColorMap[r].b[2] * p + earthColorMap[r].a[2] *  (1 - p);*/
+
       n = Math.floor(n);
       noiseMap[index] = theData[n*4];
       noiseMap[index + 1] = theData[n*4+1];
@@ -96,6 +92,9 @@ function generateTextureColor(w,h,map){
   }
   return noiseMap;
 }
+
+var pako = require("pako");
+
 
 
 function generateTextureGrayScale(w,h,map){
@@ -122,11 +121,135 @@ function rescaleMap(map,min,max){
   }
   return map;
 }
+function rescaleValue(val,min,max){
+  return (((val - min) * (255 - 0)) / (max - min)) + 0;;
+}
+
+function encodeMap(name,map){
+  //console.log(map);
+  var s = "";
+  for (var i=0;i<map.length;i++){
+    s += String.fromCharCode(map[i]);
+  }
+  console.log(map.length);
+  var s = pako.deflate(s,{raw : true, to : "string"});
+  console.log(s.length);
+  localStorage.setItem(name,s);
+}
+
+function decodeMap(name,type){
+  var t = localStorage.getItem(name);
+  if (t){
+    console.log(t.length);
+    t = pako.inflate(t,{raw : true ,to : "string"});
+    console.log(t.length);
+    var arr = new type(t.length);
+    for (var i=0;i<t.length;i++){
+      console.log(t[i]);
+      arr[i] = t[i].charCodeAt();
+    }
+    console.log(t[i]);
+    return arr;
+  }
+  return null;
+}
+
+/*
+2097152
+39076
+
+427255
+*/
+
+
+function generateTextureFull(noiseWidth,noiseHeight,rnd,temp){
+  var cm = decodeMap("texture",Uint8Array);
+  var nm = null;
+  if (cm){
+    return {noise : nm,color:cm};
+  }
+  else{
+    nm = generateNoiseMap(noiseWidth,noiseHeight,rnd,temp);
+    cm = generateTextureColor(noiseWidth,noiseHeight,nm);
+  }
+  encodeMap("texture",cm);
+  //encodeMap("noise",nm);
+  console.log(cm);
+  return {noise : nm,color:cm};
+
+  var w = noiseWidth;
+	var h = noiseHeight;
+
+
+	var noiseMap = new Array(w*h);
+  var colorMap = new Uint8Array(w*h*4);
+
+	var simplex = new Noise.simplex(rnd);
+
+
+
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  var theData = context.getImageData(0, 5, 256,1).data;
+  theData = datat;
+
+	var radius = 100;
+	var c = 0;
+
+	var DEG_TO_RAD = 0.0174533;
+  if (temp){
+    var per = temp.p;
+    var sc = temp.s
+  }
+  else{
+    var per = 0.5;
+    var sc = 0.006;
+  }
+
+
+  var min = 999999;
+  var max = -999999;
+
+	for (var j=0;j<h;j++){
+		for (var i=0;i<w;i++){
+
+			var theta = (2 * Math.PI/w) * i;
+			var phi = (Math.PI/h) * j;
+
+			var x = Math.cos(theta) * Math.sin(phi) * radius;
+			var y = Math.sin(theta) * Math.sin(phi) * radius;
+			var z = -Math.cos(phi) * radius;
+
+			var n = sumOctave(6, x,y,z, per, sc, 0,255,simplex,3);
+      if (n<min)min = n;
+      if (n>max)max = n;
+
+			noiseMap[c] = rescaleMap(n,min,max);
+      var index = c*4;
+      var last = 0;
+      var curr;
+      var r;
+
+      var p = (n-last)/(curr-last);
+      n = Math.floor(n);
+
+
+      colorMap[index] = theData[n*4];
+      colorMap[index + 1] = theData[n*4+1];
+      colorMap[index + 2] = theData[n*4+2];
+      colorMap[index + 3] = 255;
+
+			c++;
+		}
+	}
+  //console.log(n);
+	return {noise : noiseMap,color:colorMap};
+}
 
 function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp){
 	var w = noiseWidth;
 	var h = noiseHeight;
-
+  console.log("NOISE");
 	var noiseMap = new Array(w*h);
 
 	var simplex = new Noise.simplex(rnd);
@@ -140,8 +263,8 @@ function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp){
     var sc = temp.s
   }
   else{
-    var per = 0.3;
-    var sc = 0.06;
+    var per = 0.5;
+    var sc = 0.006;
   }
 
 
@@ -174,4 +297,5 @@ export const Texture = {
   map : generateNoiseMap,
   color : generateTextureColor,
   gray : generateTextureGrayScale,
+  full : generateTextureFull,
 };

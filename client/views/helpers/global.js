@@ -9,7 +9,8 @@ Template.registerHelper("selectedUnit",function(){
 });
 
 Template.registerHelper("units",function(){
-  return db.unit.find({});
+  var f = db.unit.find({owner : Session.get("selectedCamp")});
+  return f;
 });
 
 Template.registerHelper("getUnit",function(id){
@@ -21,5 +22,6 @@ Template.registerHelper("selectedStructure",function(){
 });
 
 Template.registerHelper("structures",function(){
-  return db.structure.find({});
+  var f = db.structure.find({owner : Session.get("selectedCamp")});
+  return f;
 });

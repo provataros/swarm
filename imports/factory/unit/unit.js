@@ -63,8 +63,10 @@ var units = {
   }
 }
 
-var unit = function(name){
-  return units[name]?units[name]:{};
+var unit = function(name,owner){
+  var u = units[name]?units[name]:{};
+  u.owner = owner;
+  return $.extend({},u);
 }
 unit.exists = function(name){
   return !(units[name] == undefined);

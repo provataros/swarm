@@ -27,6 +27,7 @@ var names = [
   "upgrades",
   "base",
   "queue",
+  "camp",
 ]
 
 

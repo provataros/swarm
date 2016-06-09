@@ -8,12 +8,12 @@ function u_structure(up){
   var f = db.structure.update({_id : up.parent._id },{
     $pull : {"upgrades.pending" : up.name}
   });
-  db.structure.insert(Factory.structure(up.name));
+  db.structure.insert(Factory.structure(up.name,Session.get("selectedCamp")));
 }
 
 function u_hp(up){
   var s = [];
-  db.unit.update({},{$inc : {"stats.hp" : 10 }},{multi : true});
+  db.unit.update({owner : Session.get("selectedCamp")},{$inc : {"stats.hp" : 10 }},{multi : true});
   db.base.update({type : "unit"},{$inc : {"stats.hp" : 10 }},{multi : true});
 }
 function u_hp2(up){

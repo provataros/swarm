@@ -10,6 +10,7 @@ localdb.upgrades = new Mongo.Collection(null);
 localdb.base = new Mongo.Collection(null);
 localdb.queue = new Mongo.Collection(null);
 localdb._db = new Mongo.Collection(null);
+localdb.camp = new Mongo.Collection(null);
 
 localdb.import = function (name,state){
   var that = this;
