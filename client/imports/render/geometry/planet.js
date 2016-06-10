@@ -71,7 +71,7 @@ var display = {
 
 
 function createRenderer(){
-	if (!renderer) renderer =  new THREE.WebGLRenderer();
+	if (!renderer) renderer =  new THREE.WebGLRenderer({ alpha: true });
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.domElement.id = "renderer";
 	var displ = $("#display");
@@ -144,6 +144,29 @@ function showPlanet(p){
 	material.map.needsUpdate = true;
 
 
+  var canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size/2;
+  canvas.id = "testcanvas";
+  var ctx = canvas.getContext('2d');
+  var imgData = ctx.createImageData(size,size/2);
+  var test = {};
+  for (var i=0;i<imgData.data.length;i++)
+  {
+    test[map.color[i]] = true;
+    imgData.data[i]=map.color[i];
+  }
+  console.log(test);
+  ctx.putImageData(imgData,0,0);
+  $("#display").append(canvas);
+  //$("#renderer")[0].getContext("2d").putImageData(map.color,0,0);
+  $("#testcanvas").on("mousemove",function(e){
+    var x = e.offsetX;
+    var y = e.offsetY;
+    var d = e.target.getContext("2d").getImageData(x,y,1,1).data;
+    console.log(e.target.getContext("2d").getImageData(x,y,1,1).data);
+    $("#display").css("background-color","rgba("+d[0]+","+d[1]+","+d[2]+",1)");
+  })
 	var earthMesh = new THREE.Mesh(geometry, material);
 
 	var p = new THREE.Object3D();
@@ -178,13 +201,23 @@ function showPlanet(p){
 
 
   $("#renderer").on("mousemove",function(e){
-    mouse.x = ( e.clientX / $(this).width() ) * 2 - 1;
-    mouse.y = - ( e.clientY / $(this).height() ) * 2 + 1;
+    mouse.x = ( e.offsetX / $(this).width() ) * 2 - 1;
+    mouse.y = - ( e.offsetY / $(this).height() ) * 2 + 1;
     mouse.z = 1;
     raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObject( p , true );
+    var intersects = raycaster.intersectObject( earthMesh , true );
     if (intersects.length > 0){
+      var x = Math.round(intersects[0].uv.x * size);
+      var y = Math.round(intersects[0].uv.y * size/2);
+      var r = intersects[0].object.material.map.image.data[(y * (size/2) + x)*4];
+      var g = intersects[0].object.material.map.image.data[(y * (size/2) + x)*4 + 1];
+      var b = intersects[0].object.material.map.image.data[(y * (size/2) + x)*4 + 2];
+      console.log(x,y,x*size+y,r,g,b);
       line.geometry.vertices[1] = intersects[0].point.multiplyScalar(1.5);
+      line.material.color.x = r/255;
+      line.material.color.y = g/255;
+      line.material.color.z = b/255;
+      line.material.needsUpdate = true;
       line.geometry.verticesNeedUpdate = true;
     }
   });
