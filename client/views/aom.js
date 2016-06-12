@@ -2,7 +2,6 @@
 import {Template} from 'meteor/templating';
 import {db} from "/client/imports/localdb";
 import {Static} from "/imports/static";
-import {Render} from "/client/imports/render";
 
 Session.set("selectedItem",{_id : 0});
 Session.set("selectedItems",{_sel : []});
