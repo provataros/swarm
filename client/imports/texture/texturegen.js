@@ -33,6 +33,7 @@ function displayCurrentTexture(map){
     var y = e.offsetY;
     var d = e.target.getContext("2d").getImageData(x,y,1,1).data;
     $("#display").css("background-color","rgba("+d[0]+","+d[1]+","+d[2]+",1)");
+    console.log(x,y);
   })
 }
 
@@ -153,7 +154,7 @@ function generateTextureGrayScale(w,h,map){
 
 function rescaleMap(map,min,max){
   for (var i =0;i<map.length;i++){
-    map[i] = (((map[i] - min) * (255 - 0)) / (max - min)) + 0;
+    map[i] = ~~(((map[i] - min) * (255 - 0)) / (max - min)) + 0;
   }
   return map;
 }
@@ -227,7 +228,7 @@ function generateTextureFull(id,noiseWidth,noiseHeight,rnd,temp){
   if (nm){
     console.log("Creating");
     cm = generateTextureColor(noiseWidth,noiseHeight,nm);
-    //displayCurrentTexture(cm);
+    displayCurrentTexture(cm);
     return {noise : nm,color:cm };
   }
   else{
@@ -282,6 +283,7 @@ function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp){
 			noiseMap[c] = n;
 			c++;
 		}
+    console.log(c);
 	}
   var n = rescaleMap(noiseMap,min,max);
   //console.log(n);

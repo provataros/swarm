@@ -104,6 +104,8 @@ export function createRenderer(){
 		e.stopPropagation();
 		display.zoom(e.originalEvent.deltaY>=0);
 	})
+
+
 	return renderer;
 }
 
@@ -129,7 +131,7 @@ function showPlanet(planet){
 	createRenderer();
 	var scene = createScene();
 	var camera = createCamera();
-
+	console.log(planet);
 	scene.add( camera );
 
 
@@ -139,7 +141,7 @@ function showPlanet(planet){
 	var p = new THREE.Object3D();
 
 
-	p.add(planet);
+	p.add(planet.planet);
 
 	var material = new THREE.LineBasicMaterial({
   	color: 0xffffff
@@ -153,10 +155,16 @@ function showPlanet(planet){
 
   p.add(line);
 
-  var cube2 = new THREE.Mesh( new THREE.SphereGeometry(5,8,8), new THREE.MeshNormalMaterial() );
-  cube2.position.copy(new THREE.Vector3(-60,-60,-60));
 
-  p.add(cube2);
+	for (var i =0;i<planet.extra.camps.length;i++){
+		var camp = new THREE.Mesh( new THREE.SphereGeometry(2,8,8), new THREE.MeshNormalMaterial() );
+	  camp.position.copy(planet.extra.camps[i]);
+		p.add(camp);
+	}
+
+
+
+
 
 	p.orbit = {x:0,y:(Math.random() * (0.001 - 0.01) + 0.01),z:  (Math.random() * (0.001 - 0.01) + 0.01)  };
 	scene.add(p);
@@ -170,7 +178,41 @@ function showPlanet(planet){
   var raycaster = new THREE.Raycaster(); // create once
   var mouse = new THREE.Vector3(); // create once
   var test = new THREE.Vector3(1,1,1);
+	var size = 1024;
 
+	$("#renderer").on("mousemove",function(e){
+		mouse.x = ( e.offsetX / $(this).width() ) * 2 - 1;
+		mouse.y = - ( e.offsetY / $(this).height() ) * 2 + 1;
+		mouse.z = 1;
+		raycaster.setFromCamera( mouse, camera );
+		var intersects = raycaster.intersectObject( planet.planet , true );
+		if (intersects.length > 0){
+			var x = Math.round(intersects[0].uv.x * size);
+			var y = Math.round(intersects[0].uv.y * size/2);
+
+			console.log(x,y,intersects[0].point);
+
+			var r = intersects[0].object.material.map.image.data[(y * (size) + x)*4];
+			var g = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 1];
+			var b = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 2];
+
+			test.x = intersects[0].point.x;
+			test.y = intersects[0].point.y;
+			test.z = intersects[0].point.z;
+
+			return;
+
+			intersects[0].object.parent.worldToLocal(test);
+			line.geometry.vertices[1] = test.multiplyScalar(1.5);
+			line.material.color.x = r/120;
+			line.material.color.y = g/120;
+			line.material.color.z = b/120;
+			line.material.needsUpdate = true;
+			line.geometry.verticesNeedUpdate = true;
+
+			$("#display").css("background-color","rgba("+r+","+g+","+b+",1)");
+		}
+	});
 
 	updateRender(scene,camera,[p]);
 }

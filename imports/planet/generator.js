@@ -5,14 +5,15 @@ function Generate(id){
   var planet = {
     id : id,
     radius : Random.number(70,110,rnd),
-    camps : [
-      Random.number(1,10,rnd),
-      Random.number(1,10,rnd),
-      Random.number(1,10,rnd),
-    ],
+    camps : function(){
+      var a = [];
+      for (var i=0;i<Random.number(1,5,rnd);i++){
+        a.push(Math.random());
+      }
+      return a;
+    }(),
     type : Random.number(0,2,rnd),
   }
-  console.log(planet);
   return planet;
 }
 
