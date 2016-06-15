@@ -131,7 +131,7 @@ function showPlanet(planet){
 	createRenderer();
 	var scene = createScene();
 	var camera = createCamera();
-	console.log(planet);
+	//console.log(planet);
 	scene.add( camera );
 
 
@@ -146,14 +146,6 @@ function showPlanet(planet){
 	var material = new THREE.LineBasicMaterial({
   	color: 0xffffff
   });
-
-	geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-  geometry.vertices.push(new THREE.Vector3(1200, 1200, 1200));
-  geometry.dynamic = true;
-	var line = new THREE.Line(geometry, material);
-
-  p.add(line);
 
 
 	for (var i =0;i<planet.extra.camps.length;i++){
@@ -190,7 +182,7 @@ function showPlanet(planet){
 			var x = Math.round(intersects[0].uv.x * size);
 			var y = Math.round(intersects[0].uv.y * size/2);
 
-			console.log(x,y,intersects[0].point);
+			console.log(x,y,intersects[0].point,(y * (size) + x));
 
 			var r = intersects[0].object.material.map.image.data[(y * (size) + x)*4];
 			var g = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 1];

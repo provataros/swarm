@@ -7,7 +7,7 @@ import {Timers} from "/client/imports/timers";
 import {_3D} from "/client/imports/3D";
 import {Planet} from "/imports/planet";
 
-var time = 2;
+var time = 1;
 var id = "SXxn64cvuCZdAzAJy" + time;
 Template.body.rendered = function () {
   var planet = _3D.create.planet(Planet.generate(id));

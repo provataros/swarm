@@ -27,18 +27,19 @@ function createPlanet(planet){
 
   var earthMesh = new THREE.Mesh(geometry, material);
   //console.log(map.noise);
-  console.log(map.noise.length,map.noise);
+  //console.log(map.noise.length,map.noise);
   return {
     planet : earthMesh,
     data : planet,
     extra : {
       camps : function(map){
         var a = [];
+        var rnd = new Math.seedrandom(planet.id);
         for (var i=0;i<planet.camps.length;i++){
           a.push(createCamp(rnd,map,planet));
         }
         return a;
-      }(map)
+      }(map),
     }
   }
 }
@@ -53,30 +54,32 @@ function createPlanet(planet){
 function createCamp(rnd,map,planet){
   var noise = map.noise;
   var p = Random.number(0,noise.length-1,rnd);
-  var v = 0;
+  var n = 0;
   var index = 0;
   //for (var i=0;i<4;i++){
   while (true){
     index = Random.number(0,map.noise.length,rnd);
-    v = map.noise[index];
-    if (v>=180){
+    n = map.noise[index];
+    if (n>=150){
       break;
     }
   }
   var x = ~~(index/(size));
-  var y = index%size;
+  var y = index%(size);
 
+  var u = y / 1024;
+  var v = x / 512;
 
+  var theta = 2 * Math.PI * u;
+  var phi = Math.PI * v;
 
-  var _u =  2 * Math.PI * x;
-  var _v =  Math.PI * y;
+  var _x = -Math.cos(theta) * Math.sin(phi) * planet.radius;
+  var _z = Math.sin(theta) * Math.sin(phi) * planet.radius;
+  var _y = -Math.cos(phi) * planet.radius;
 
-  console.log(  (x+1024)%1024  ,  (y+512)%512  );
+  var res = {x:_x,y:_y,z:_z};
 
-  var _x = Math.cos(x) * Math.sin(y) * planet.radius;
-  var _y = Math.sin(x) * Math.sin(y) * planet.radius;
-  var _z = -Math.cos(y) * planet.radius;
-  return {x:_x,y:_y,z:_z,u:x,v:y};
+  return res;
 }
 
 
@@ -85,5 +88,7 @@ export const Planet = {
 }
 
 /*
-
+0.5537109375 0.044921875
+0.0849609375 0.033203125
+0.9482421875 0.396484375
 */
