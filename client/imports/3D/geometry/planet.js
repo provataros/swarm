@@ -12,7 +12,7 @@ function createPlanet(planet){
 
 
   var sss = Date.now();
-  var geometry   = new THREE.IcosahedronGeometry(planet.radius,2);
+  var geometry   = new THREE.HexasphereGeometry(planet.radius,2);
   console.log(Date.now()-sss);
   var verts = geometry.vertices;
   var faces = geometry.faces;
