@@ -8,22 +8,43 @@ var THREE = Three;
 var size = 1024;
 
 function createPlanet(planet){
-  var geometry   = new THREE.SphereGeometry(planet.radius,32,32);
+
+
+
+  var sss = Date.now();
+  var geometry   = new THREE.IcosahedronGeometry(planet.radius,2);
+  console.log(Date.now()-sss);
+  var verts = geometry.vertices;
+  var faces = geometry.faces;
+  for (var i=0;i<geometry.faces.length;i++){
+    var f1 = verts[faces[i].a];
+    var f2 = verts[faces[i].b];
+    var f3 = verts[faces[i].c];
+    geometry.faces[i].centroid2 = {
+      x : (f1.x + f2.x + f3.x)/3,
+      y : (f1.y + f2.y + f3.y)/3,
+      z : (f1.z + f2.z + f3.z)/3,
+    }
+    console.log(geometry.faces[i].centroid);
+  }
+  //var geometry   = new THREE.SphereGeometry(planet.radius,32,32);
   THREE.ImageUtils.crossOrigin = '';
   console.log(planet);
   var rnd = new Math.seedrandom(planet.id);
   var map;
+  console.log(geometry);
 
-  var sss = Date.now();
+
 
   map = Texture.full(planet.id,size,size/2,rnd);
 
-  console.log(Date.now()-sss);
 
-  var material = new THREE.MeshPhongMaterial();
-	material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
+  var material = new THREE.MeshBasicMaterial();
+  material.wireframe = true;
+  map.color = 0x000000;
+	//material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
 
-	material.map.needsUpdate = true;
+	//material.map.needsUpdate = true;
 
   var earthMesh = new THREE.Mesh(geometry, material);
   //console.log(map.noise);

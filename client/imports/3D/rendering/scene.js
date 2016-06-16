@@ -173,6 +173,7 @@ function showPlanet(planet){
 	var size = 1024;
 
 	$("#renderer").on("mousemove",function(e){
+		return;
 		mouse.x = ( e.offsetX / $(this).width() ) * 2 - 1;
 		mouse.y = - ( e.offsetY / $(this).height() ) * 2 + 1;
 		mouse.z = 1;
