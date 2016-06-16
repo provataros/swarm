@@ -24,7 +24,6 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 
 	this.type = 'IcosahedronGeometry';
-
 	this.parameters = {
 		vertices: vertices,
 		indices: indices,
@@ -56,9 +55,10 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		faces[ j ] = new THREE.Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
 	}
 
-  console.log(faces[5]);
-
 	var centroid = new THREE.Vector3();
+  var dict = {};
+	var edges = {}
+
 
 	for ( var i = 0, l = faces.length; i < l; i ++ ) {
 
@@ -66,7 +66,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	}
 
-
+	//console.log(edges);
 	// Handle case when face straddles the seam
 
 	for ( var i = 0, l = this.faceVertexUvs[ 0 ].length; i < l; i ++ ) {
@@ -93,22 +93,45 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 	}
 
 
-	// Apply radius
-
 	for ( var i = 0, l = this.vertices.length; i < l; i ++ ) {
-
 		this.vertices[ i ].multiplyScalar( radius );
-
 	}
-
 
 	// Merge vertices
 
-	this.mergeVertices();
+	this.mergeVerts = mergeVerts;
+  this.mergeVerts();
+  mins = {};
+  /*for (var i = 0;i<this.tiles.length;i++){
+    var t = $.merge([],this.tiles[i]);
+    var o = [t[0]];
+    var it = 1;
 
-	this.computeFaceNormals();
+    var min = 6666666666;
+    for (var j=1;j<t.length;j++){
+      var d = ~~t[0].distanceToSquared(t[j]);
+      if (d<min){
+        min = d;
+      }
+    }
+
+    while(t.length >1){
+      for (var j=1;j<t.length;j++){
+        console.log(~~o[o.length-1].distanceToSquared(t[j]),min);
+        if (~~o[o.length-1].distanceToSquared(t[j]) == min){
+          o.push(t[j]);
+          t.splice(j,1);
+          break;
+        }
+      }
+    }
+    o.center = this.tiles[i].center;
+    this.tiles[i] = o;
+  }*/
+  this.computeFaceNormals();
 
 	this.boundingSphere = new THREE.Sphere( new THREE.Vector3(), radius );
+
 
 
 	// Project vector onto sphere's surface
@@ -131,14 +154,46 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	// Approximate a curved face with recursively sub-divided triangles.
 
-	function make( v1, v2, v3 ) {
 
+
+  function assoc(e,a){
+    if (dict[e])dict[e].push(a);
+    else dict[e] = [a];
+  }
+
+	function side(e1,e2,c){
+		var key;
+		if (e1>e2){
+			key = e2 + "_" + e1;
+		}
+		else{
+			key = e1 + "_" + e2;
+		}
+    if (edges[key]){
+			edges[key].push(c);
+		}
+		else{
+			edges[key] = [c];
+		}
+  }
+
+
+	function make( v1, v2, v3 ) {
 		var face = new THREE.Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
     face.centroid = new THREE.Vector3(
       (v1.x + v2.x + v3.x ) / 3,
       (v1.y + v2.y + v3.y ) / 3,
       (v1.z + v2.z + v3.z ) / 3,
     ).multiplyScalar( radius );
+
+    assoc(v1.index,face.centroid);
+    assoc(v2.index,face.centroid);
+    assoc(v3.index,face.centroid);
+
+
+		side(v1.index,v2.index,face.centroid);
+		side(v2.index,v3.index,face.centroid);
+		side(v3.index,v1.index,face.centroid);
 
 		that.faces.push( face );
 
@@ -251,6 +306,104 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		return uv.clone();
 
 	}
+
+  function mergeVerts () {
+
+  		var verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
+  		var unique = [], changes = [];
+      //console.log(dict);
+  		var v, key;
+  		var precisionPoints = 4; // number of decimal points, e.g. 4 for epsilon of 0.0001
+  		var precision = Math.pow( 10, precisionPoints );
+  		var i, il, face;
+  		var indices, j, jl;
+      var un = 0;
+  		for ( i = 0, il = this.vertices.length; i < il; i ++ ) {
+
+  			v = this.vertices[ i ];
+  			key = Math.round( v.x * precision ) + '_' + Math.round( v.y * precision ) + '_' + Math.round( v.z * precision );
+
+  			if ( verticesMap[ key ] === undefined ) {
+
+  				verticesMap[ key ] = i;
+  				unique.push( this.vertices[ i ] );
+  				changes[ i ] = unique.length - 1;
+          if (!dict[verticesMap[ key ]])dict[verticesMap[ key ]] = [];
+          un++;
+  			} else {
+
+  				//console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
+  				changes[ i ] = changes[ verticesMap[ key ] ];
+          if (dict[i]) $.merge(dict[verticesMap[ key ]],dict[i]);
+  			}
+
+  		}
+      this.tiles = [];
+      for (var i=0;i<unique.length;i++){
+        var j = unique[i].index;
+        dict[j].center = i;
+        this.tiles.push(dict[j]);
+      }
+
+
+  		// if faces are completely degenerate after merging vertices, we
+  		// have to remove them from the geometry.
+  		var faceIndicesToRemove = [];
+
+  		for ( i = 0, il = this.faces.length; i < il; i ++ ) {
+
+  			face = this.faces[ i ];
+
+  			face.a = changes[ face.a ];
+  			face.b = changes[ face.b ];
+  			face.c = changes[ face.c ];
+
+  			indices = [ face.a, face.b, face.c ];
+
+  			var dupIndex = - 1;
+
+  			// if any duplicate vertices are found in a Face3
+  			// we have to remove the face as nothing can be saved
+  			for ( var n = 0; n < 3; n ++ ) {
+
+  				if ( indices[ n ] === indices[ ( n + 1 ) % 3 ] ) {
+
+  					dupIndex = n;
+  					faceIndicesToRemove.push( i );
+  					break;
+
+  				}
+
+  			}
+
+  		}
+
+
+			//console.log(faceIndicesToRemove);
+
+  		for ( i = faceIndicesToRemove.length - 1; i >= 0; i -- ) {
+
+  			var idx = faceIndicesToRemove[ i ];
+
+  			this.faces.splice( idx, 1 );
+
+  			for ( j = 0, jl = this.faceVertexUvs.length; j < jl; j ++ ) {
+
+  				this.faceVertexUvs[ j ].splice( idx, 1 );
+
+  			}
+
+  		}
+
+  		// Use unique set of vertices
+
+  		var diff = this.vertices.length - unique.length;
+  		this.vertices = unique;
+  		return diff;
+
+  	}
+
+
 
 
 };

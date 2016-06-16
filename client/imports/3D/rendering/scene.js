@@ -147,11 +147,29 @@ function showPlanet(planet){
   	color: 0xffffff
   });
 
+	console.log(planet);
+	var sss = Date.now();
+	for (var i =0;i<planet.planet.geometry.tiles.length;i++){
+		continue;
+		var tile = new THREE.Geometry();
+		var t = planet.planet.geometry.tiles[i];
+		var c = planet.planet.geometry.vertices[t.center];
 
+		tile.vertices = $.merge([new THREE.Vector3(c.x,c.y,c.z)],t);
+		tile.faces.push(new THREE.Face3(0,1,2))
+		tile.faces.push(new THREE.Face3(0,2,3))
+		tile.faces.push(new THREE.Face3(0,3,4))
+		tile.faces.push(new THREE.Face3(0,4,5))
+		tile.faces.push(new THREE.Face3(0,5,1))
+		var meshh = new THREE.Mesh(tile , new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide} ) );
+		p.add(meshh);
+	}
+
+  console.log(Date.now()-sss);
 	for (var i =0;i<planet.extra.camps.length;i++){
-		var camp = new THREE.Mesh( new THREE.SphereGeometry(2,8,8), new THREE.MeshNormalMaterial() );
+		/*var camp = new THREE.Mesh( new THREE.SphereGeometry(2,8,8), new THREE.MeshNormalMaterial() );
 	  camp.position.copy(planet.extra.camps[i]);
-		p.add(camp);
+		p.add(camp);*/
 	}
 
 

@@ -12,20 +12,12 @@ function createPlanet(planet){
 
 
   var sss = Date.now();
-  var geometry   = new THREE.HexasphereGeometry(planet.radius,2);
+  var geometry   = new THREE.HexasphereGeometry(planet.radius,4);
   console.log(Date.now()-sss);
+  console.log(geometry.tiles.length);
   var verts = geometry.vertices;
   var faces = geometry.faces;
   for (var i=0;i<geometry.faces.length;i++){
-    var f1 = verts[faces[i].a];
-    var f2 = verts[faces[i].b];
-    var f3 = verts[faces[i].c];
-    geometry.faces[i].centroid2 = {
-      x : (f1.x + f2.x + f3.x)/3,
-      y : (f1.y + f2.y + f3.y)/3,
-      z : (f1.z + f2.z + f3.z)/3,
-    }
-    console.log(geometry.faces[i].centroid);
   }
   //var geometry   = new THREE.SphereGeometry(planet.radius,32,32);
   THREE.ImageUtils.crossOrigin = '';
