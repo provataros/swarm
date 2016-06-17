@@ -61,8 +61,8 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 
 	for ( var i = 0, l = faces.length; i < l; i ++ ) {
-
-		subdivide( faces[ i ], detail );
+		subdiv(faces[i],4);
+		subdivide( faces[ i ], 0 );
 
 	}
 
@@ -101,33 +101,6 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	this.mergeVerts = mergeVerts;
   this.mergeVerts();
-  mins = {};
-  /*for (var i = 0;i<this.tiles.length;i++){
-    var t = $.merge([],this.tiles[i]);
-    var o = [t[0]];
-    var it = 1;
-
-    var min = 6666666666;
-    for (var j=1;j<t.length;j++){
-      var d = ~~t[0].distanceToSquared(t[j]);
-      if (d<min){
-        min = d;
-      }
-    }
-
-    while(t.length >1){
-      for (var j=1;j<t.length;j++){
-        console.log(~~o[o.length-1].distanceToSquared(t[j]),min);
-        if (~~o[o.length-1].distanceToSquared(t[j]) == min){
-          o.push(t[j]);
-          t.splice(j,1);
-          break;
-        }
-      }
-    }
-    o.center = this.tiles[i].center;
-    this.tiles[i] = o;
-  }*/
   this.computeFaceNormals();
 
 	this.boundingSphere = new THREE.Sphere( new THREE.Vector3(), radius );
@@ -211,6 +184,67 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 
 	// Analytically subdivide a face to the required detail level.
+
+
+
+	function subdiv(face,it){
+		var a = that.vertices[face.a];
+		var b = that.vertices[face.b];
+		var c = that.vertices[face.c];
+
+		var left = [];
+		var right = [];
+		var top = [];
+
+		for (var i=1;i<=it;i++){
+			var x = i*((a.x + b.x)/(it+1));
+			var y = i*((a.y + b.y)/(it+1));
+			var z = i*((a.z + b.z)/(it+1));
+			var v1 = new THREE.Vector3(x,y,z);
+			left.push(v1);
+			x = i*((a.x + c.x)/(it+1));
+			y = i*((a.y + c.y)/(it+1));
+			z = i*((a.z + c.z)/(it+1));
+			var v2 = new THREE.Vector3(x,y,z);
+			right.push(v2);
+
+			for (var j=1;j<=i-1;j++){
+				x = j*((v1.x + v2.x)/(i));
+				y = j*((v1.y + v2.y)/(i));
+				z = j*((v1.z + v2.z)/(i));
+				var t = new THREE.Vector3(x,y,z);
+				top.push(t);
+			}
+
+		}
+		console.log(left,right,top);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	function subdivide( face, detail ) {
 
@@ -350,6 +384,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
   		// have to remove them from the geometry.
   		var faceIndicesToRemove = [];
 
+			console.log(this.faces.length);
   		for ( i = 0, il = this.faces.length; i < il; i ++ ) {
 
   			face = this.faces[ i ];
@@ -370,6 +405,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
   					dupIndex = n;
   					faceIndicesToRemove.push( i );
+						console.log(i);
   					break;
 
   				}
@@ -399,6 +435,8 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
   		var diff = this.vertices.length - unique.length;
   		this.vertices = unique;
+
+						console.log(this.faces.length);
   		return diff;
 
   	}
