@@ -148,22 +148,34 @@ function showPlanet(planet){
   });
 
 	console.log(planet);
+	var vvv = planet.planet.geometry.test.vertices;
+	var ttt = planet.planet.geometry.test.triangles;
 	var sss = Date.now();
-	for (var i =0;i<planet.planet.geometry.tiles.length;i++){
-		continue;
-		var tile = new THREE.Geometry();
-		var t = planet.planet.geometry.tiles[i];
-		var c = planet.planet.geometry.vertices[t.center];
 
-		tile.vertices = $.merge([new THREE.Vector3(c.x,c.y,c.z)],t);
-		tile.faces.push(new THREE.Face3(0,1,2))
-		tile.faces.push(new THREE.Face3(0,2,3))
-		tile.faces.push(new THREE.Face3(0,3,4))
-		tile.faces.push(new THREE.Face3(0,4,5))
-		tile.faces.push(new THREE.Face3(0,5,1))
-		var meshh = new THREE.Mesh(tile , new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide} ) );
-		p.add(meshh);
+
+	var tile = new THREE.Geometry();
+
+	//console.log(ttt);
+
+	var ccc = [];
+
+	for (var i =0;i<planet.planet.geometry.test.triangles.length;i++){
+
+		var t = planet.planet.geometry.test.triangles[i];
+		t = new THREE.Face3(t.a,t.b,t.c);
+		tile.vertices[vvv[t.a].index] = vvv[t.a];
+		tile.vertices[vvv[t.b].index] = vvv[t.b];
+		tile.vertices[vvv[t.c].index] = vvv[t.c];
+		t.materialIndex = ccc.length;
+		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide} ));
+		tile.faces.push(t);
 	}
+	console.log(tile);
+	//new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
+	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc) );
+	p.add(meshh);
+
+
 
   console.log(Date.now()-sss);
 	for (var i =0;i<planet.extra.camps.length;i++){

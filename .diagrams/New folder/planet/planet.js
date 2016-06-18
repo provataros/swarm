@@ -54,9 +54,10 @@ function renderHexasphere(geometry){
 function createHexasphere(){
 
 	var time = Date.now();
-	var hexasphere = new Hexasphere(100,16,50);
+	var hexasphere = new Hexasphere(150,50,50);
 
 	console.log(Date.now()-time);
+	console.log(hexasphere);
 	console.log(hexasphere.tiles.length);
 	var count = 0;
 

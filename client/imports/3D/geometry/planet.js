@@ -14,7 +14,6 @@ function createPlanet(planet){
   var sss = Date.now();
   var geometry   = new THREE.HexasphereGeometry(planet.radius,3);
   console.log(Date.now()-sss);
-  console.log(geometry.tiles.length);
   var verts = geometry.vertices;
   var faces = geometry.faces;
   for (var i=0;i<geometry.faces.length;i++){
