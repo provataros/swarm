@@ -141,7 +141,7 @@ function showPlanet(planet){
 	var p = new THREE.Object3D();
 
 
-	p.add(planet.planet);
+	//p.add(planet.planet);
 
 	var material = new THREE.LineBasicMaterial({
   	color: 0xffffff
@@ -167,14 +167,38 @@ function showPlanet(planet){
 		tile.vertices[vvv[t.b].index] = vvv[t.b];
 		tile.vertices[vvv[t.c].index] = vvv[t.c];
 		t.materialIndex = ccc.length;
-		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide} ));
+		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : false} ));
 		tile.faces.push(t);
 	}
 	console.log(tile);
 	//new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
 	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc) );
-	p.add(meshh);
+	//p.add(meshh);
 
+
+	var tile = new THREE.Geometry();
+	tile.vertices = planet.planet.geometry.test.centers;
+	var ccc = [];
+	for (var i =0;i<planet.planet.geometry.test.hex.length;i++){
+		var t = planet.planet.geometry.test.hex[i];
+		var c = tile.vertices.length;
+		tile.vertices.push(t.c);
+		for (var j=0;j<t.length-1;j++){
+			var f = new THREE.Face3(c,t[j],t[j+1]);
+			f.materialIndex = ccc.length;
+			tile.faces.push(f)
+		}
+		var f = new THREE.Face3(c,t[t.length-1],t[0])
+		f.materialIndex = ccc.length;
+		tile.faces.push(f)
+		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : false} ));
+
+	}
+	//console.log(tile);
+	//var mat = new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
+	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc)  );
+	console.log(tile);
+	p.add(meshh);
 
 
   console.log(Date.now()-sss);

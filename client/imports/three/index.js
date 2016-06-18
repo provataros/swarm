@@ -44,12 +44,14 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 	this.test = {};
 	this.test.vertices = [];
 	this.test.faces = [];
+	this.test.centers = [];
+	this.test.hex = [];
 	var p = this.vertices;
 	this.test.triangles = [];
 	var xx = 666;
 	var yy = 555;
 	var zz = 444;
-
+	var vert = null;
 	var faces = [];
 
 	for ( var i = 0, j = 0, l = indices.length; i < l; i += 3, j ++ ) {
@@ -67,9 +69,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 
 	for (var i=0;i<this.vertices.length;i++){
-		xx = this.vertices[i].x;
-		yy = this.vertices[i].y;
-		zz = this.vertices[i].z;
+		vert = this.vertices[i];
 		var f = reg();
 		that.test.vertices[f.index].x *= radius;
 		that.test.vertices[f.index].y *= radius;
@@ -77,12 +77,14 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		this.vertices[i].index = f.index;
 	}
 
+	var helper = {};
+	//console.log(helper);
 	for ( var i = 0, l = faces.length; i < l; i ++ ) {
-		subdiv(faces[i],1);
-		subdivide( faces[ i ], 0 );
-
+		subdiv(faces[i], detail);
+		//subdivide( faces[ i ], it );
 	}
-	console.log(this.test.vertices.length + " number of vertices");
+	//console.log(helper);
+	//console.log(this.test.vertices.length + " number of vertices");
 
 	//console.log(that.test.vertices.length,that.test.vertices);
 	// Handle case when face straddles the seam
@@ -174,7 +176,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
       (v1.x + v2.x + v3.x ) / 3,
       (v1.y + v2.y + v3.y ) / 3,
       (v1.z + v2.z + v3.z ) / 3,
-    ).multiplyScalar( radius+1 );
+    ).multiplyScalar( radius );
 
     assoc(v1.index,face.centroid);
     assoc(v2.index,face.centroid);
@@ -204,56 +206,149 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	function reg(){
 
-		var v = {x:xx,y:yy,z:zz};
+		var v = {x:vert.x,y:vert.y,z:vert.z};
 		v.index = that.test.vertices.length;
 		that.test.vertices.push(v);
 		return v;
 	}
 
+
+
+	function split(a,b,it){
+
+		var edge = [];
+		var min = Math.min(a.index,b.index);
+		var max = Math.max(a.index,b.index)
+		var done = helper[min] && helper[min][max]
+		if (!done){
+			for (var i=1;i<it+1;i++){
+				edge.push({
+					x : a.x + i*((b.x-a.x)/(it+1)),
+					y : a.y + i*((b.y-a.y)/(it+1)),
+					z : a.z + i*((b.z-a.z)/(it+1)),
+				})
+			}
+			if (!helper[min])helper[min] = {};
+			edge = registerVertices(edge);
+			if (a.index > b.index)edge.r = true;
+			helper[min][max] = edge;
+			return edge;
+		}
+		else{
+			var tmp = helper[min][max];
+			return (tmp.r && (a.index < b.index) )|| (!tmp.r && (a.index > b.index))? $.merge([],helper[min][max]).reverse() : helper[min][max];
+		}
+	}
+
+	function registerVertices(s){
+		for (var i=0;i<s.length;i++){
+			vert = s[i];
+			s[i] = reg();
+		}
+		return s;
+	}
+
+
+	function triangle(a,b,c){
+		var o = that.test.centers.length;
+		that.test.centers.push({
+			x : (a.x + b.x + c.x)/3,
+			y : (a.y + b.y + c.y)/3,
+			z : (a.z + b.z + c.z)/3
+		});
+		that.test.triangles.push({
+			a : a.index,
+			b : b.index,
+			c : c.index,
+		});
+		return o;
+	}
+
 	function subdiv(face,it){
-		it = 1;
+
+		//split(faces[i],3);
+
+		it = 6;
 		var a = that.test.vertices[face.a];
 		var b = that.test.vertices[face.b];
 		var c = that.test.vertices[face.c];
 		var top = [];
 		var bottom = [];
+		var stack = [];
+		var cents = [];
 		var v1;
 		var v2;
 		var t=null;
 		var i,j;
-		for (i=1;i<=it+1;i++){
-			xx = a.x + i*((b.x-a.x)/(it+1));
-			yy = a.y + i*((b.y-a.y)/(it+1));
-			zz = a.z + i*((b.z-a.z)/(it+1));
-			v1 = reg();
+
+		var s1 = split(a,b,it);
+		var s2 = split(a,c,it);
+		var s3 = split(b,c,it);
+		/*var s1 = helper[Math.min(a.index,b.index)][Math.max(a.index,b.index)];
+		var s2 = helper[Math.min(a.index,c.index)][Math.max(a.index,c.index)];
+		var s3 = helper[Math.min(b.index,c.index)][Math.max(b.index,c.index)];that.test.triangles.push
+		*/
+		for (i=0;i<it;i++){
+			bottom = [];
+			cents = [];
+			v1 = s1[i];
+			v2 = s2[i];
 			bottom.push(v1);
-			xx = a.x + i*((c.x-a.x)/(it+1));
-			yy = a.y + i*((c.y-a.y)/(it+1));
-			zz = a.z + i*((c.z-a.z)/(it+1));
-			v2 = reg();
-			if (i==1)that.test.triangles.push({a : a.index, b: v1.index,c:v2.index});
+			if (i==0){
+				cents.push(triangle(a,v1,v2));
+			}
 			t = null;
-			for (j=1;j<=i-1;j++){
-				xx = v1.x + j*((v2.x-v1.x)/i);
-				yy = v1.y + j*((v2.y-v1.y)/i);
-				zz = v1.z + j*((v2.z-v1.z)/i);
-				t	= reg();
+			for (j=1;j<=i;j++){
+				vert = {
+					x	: v1.x + j*((v2.x-v1.x)/(i+1)),
+					y : v1.y + j*((v2.y-v1.y)/(i+1)),
+					z : v1.z + j*((v2.z-v1.z)/(i+1)),
+				}
+				t = reg();
+
 				if (top[j-1]){
-					that.test.triangles.push({a:bottom[bottom.length-1].index,b:top[j-1].index,c:t.index});
+					cents.push(triangle(bottom[bottom.length-1],top[j-1],t));
 				}
 				if (top[j]){
-					that.test.triangles.push({a: top[j].index,b:top[j-1].index,c :t.index});
+					cents.push(triangle(top[j],top[j-1],t));
 				}
 				bottom.push(t);
 			}
 			if (t){
-				that.test.triangles.push({a: top[top.length-1].index,b:t.index,c :v2.index});
+				cents.push(triangle(top[top.length-1],t,v2));
 			}
+
+			if (i>=2){
+				console.log(stack[i-1],top.length-2);
+				for (var k=1;k<top.length-1;k++){
+					var tile = [stack[i-1][2*k - 2],stack[i-1][2*k - 1],stack[i-1][2*k],cents[2*k+1],cents[2*k],cents[2*k-1]];
+					tile.c = top[k];
+					that.test.hex.push(tile);
+					t
+				}
+			}
+
+
+
 			bottom.push(v2);
 			top = bottom;
-			bottom = [];
+			stack.push(cents);
 		}
-		//console.log(top,bottom)
+		cents = [];
+		cents.push(triangle(b,top[0],s3[0]));
+		for (var i=0;i<s3.length;i++){
+			cents.push(triangle(top[i],top[i+1],s3[i]));
+			if (s3[i+1]){
+				cents.push(triangle(top[i+1],s3[i],s3[i+1]));
+			}
+		}
+		cents.push(triangle(c,top[top.length-1],s3[s3.length-1]));
+
+
+
+
+
+		stack.push(cents);
 	}
 
 
