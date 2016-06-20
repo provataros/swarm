@@ -47,6 +47,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 	this.test.centers = [];
 	this.test.hex = [];
 	this.test.sides = {};
+	this.test.penta = {};
 	var p = this.vertices;
 	this.test.triangles = [];
 	var xx = 666;
@@ -80,6 +81,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	var helper = {};
 	//console.log(helper);
+	console.log(faces);
 	for ( var i = 0, l = faces.length; i < l; i ++ ) {
 		subdiv(faces[i], detail);
 		//subdivide( faces[ i ], it );
@@ -270,7 +272,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 		//split(faces[i],3);
 
-		it = 4;
+		it = 3;
 		var a = that.test.vertices[face.a];
 		var b = that.test.vertices[face.b];
 		var c = that.test.vertices[face.c];
@@ -361,7 +363,6 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 				half = [stack[stack.length-1][0],cents[1],cents[0]];
 				half.c = s1[i-1];
 				sidesa.push(half);
-				console.log(cents,cents[cents.length-1],i);
 				half = [stack[stack.length-1][stack[stack.length-1].length-1],cents[cents.length-2],cents[cents.length-1]];
 				half.c = s2[i-1];
 				sidesb.push(half);
@@ -390,6 +391,12 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		sidesc.r = r3;
 		that.test.sides[m3][M3].push(sidesc);
 		stack.push(cents);
+		that.test.penta[a.index] = {};
+		that.test.penta[a.index].o = stack[0][0]
+		that.test.penta[a.index].b = b.index;
+		that.test.penta[a.index].c = c.index;
+		console.log(that.test.penta);
+		console.log(stack);
 	}
 
 
@@ -517,11 +524,9 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 				s2 = h2[1];
 				if (s1.s || s2.s){}
 				else{
-					console.log(s1[0].c.index,s2[0].c.index)
 					if (s1[0].c.index != s2[0].c.index){
 						s2.reverse();
 					}
-					console.log(s1[0].c.index,s2[0].c.index)
 					for (var i=0;i<s1.length;i++){
 						if (s1.r!=s2.r)tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][0],s2[i][1],s2[i][2]];
 						else tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][2],s2[i][1],s2[i][0]]

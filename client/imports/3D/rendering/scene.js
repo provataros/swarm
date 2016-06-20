@@ -167,7 +167,7 @@ function showPlanet(planet){
 		tile.vertices[vvv[t.b].index] = vvv[t.b];
 		tile.vertices[vvv[t.c].index] = vvv[t.c];
 		t.materialIndex = ccc.length;
-		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : false} ));
+		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : true} ));
 		tile.faces.push(t);
 	}
 	//new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
@@ -179,6 +179,7 @@ function showPlanet(planet){
 	tile.vertices = planet.planet.geometry.test.centers;
 	var ccc = [];
 	for (var i =0;i<planet.planet.geometry.test.hex.length;i++){
+
 		var t = planet.planet.geometry.test.hex[i];
 		var c = tile.vertices.length;
 		tile.vertices.push(t.c);
@@ -190,7 +191,7 @@ function showPlanet(planet){
 		var f = new THREE.Face3(c,t[t.length-1],t[0])
 		f.materialIndex = ccc.length;
 		tile.faces.push(f)
-		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : false} ));
+		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : true} ));
 
 	}
 	//console.log(tile);
