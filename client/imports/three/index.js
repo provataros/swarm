@@ -84,6 +84,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		subdiv(faces[i], detail);
 		//subdivide( faces[ i ], it );
 	}
+	join();
 	//console.log(helper);
 	//console.log(this.test.vertices.length + " number of vertices");
 
@@ -277,7 +278,11 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		var bottom = [];
 		var stack = [];
 		var cents = [];
-		var sides = {a:[],b:[],c:[]};
+
+		var sidesa = [];
+		var sidesb = [];
+		var sidesc = [];
+
 		var side = [];
 		var v1;
 		var v2;
@@ -308,24 +313,28 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		if (!that.test.sides[m3][M3])that.test.sides[m3][M3] = [];
 
 		for (i=0;i<=it;i++){
-			if (i!=it){
+			if (true || i!=it){
 				bottom = [];
 				cents = [];
-				v1 = s1[i];
-				v2 = s2[i];
+				v1 = i==it?b:s1[i];
+				v2 = i==it?c:s2[i];
 				bottom.push(v1);
 				if (i==0){
 					cents.push(triangle(a,v1,v2));
 				}
 				t = null;
 				for (j=1;j<=i;j++){
-					console.log(j);
-					vert = {
-						x	: v1.x + j*((v2.x-v1.x)/(i+1)),
-						y : v1.y + j*((v2.y-v1.y)/(i+1)),
-						z : v1.z + j*((v2.z-v1.z)/(i+1)),
+					if (i != it){
+						vert = {
+							x	: v1.x + j*((v2.x-v1.x)/(i+1)),
+							y : v1.y + j*((v2.y-v1.y)/(i+1)),
+							z : v1.z + j*((v2.z-v1.z)/(i+1)),
+						}
+						t = reg();
 					}
-					t = reg();
+					else{
+						t = s3[j-1];
+					}
 
 					if (top[j-1]){
 						cents.push(triangle(bottom[bottom.length-1],top[j-1],t));
@@ -343,64 +352,26 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 					for (var k=1;k<top.length-1;k++){
 						var tile = [stack[i-1][2*k - 2],stack[i-1][2*k - 1],stack[i-1][2*k],cents[2*k+1],cents[2*k],cents[2*k-1]];
 						tile.c = top[k];
-						//that.test.hex.push(tile);
-						t
+						that.test.hex.push(tile);
 					}
 				}
 			}
+			var half;
 			if (i >= 1){
-				if (that.test.sides[m1][M1].done){
-
-					//var tile = that.test.sides[m1][M1].r?  that.test.sides[m1][M1][it-i] : that.test.sides[m1][M1][i-1]
-					console.log(stack,cents);
-					var tile = [stack[stack.length-1][0],cents[1],cents[0]]
-					var tmp = that.test.sides[m1][M1];
-					tmp.r != r1?tile.push(
-						that.test.sides[m1][M1][it-i][0],
-						that.test.sides[m1][M1][it-i][1],
-						that.test.sides[m1][M1][it-i][2]
-					) : tile.push(
-						that.test.sides[m1][M1][i-1][2],
-						that.test.sides[m1][M1][i-1][1],
-						that.test.sides[m1][M1][i-1][0]
-					)
-					tile.c = s1[i-1];
-					that.test.hex.push(tile);
-					//console.log(that.test.sides[m1][M1]);
-				}
-				else{
-					var half = [stack[stack.length-1][0],cents[1],cents[0]];
-					console.log(half,i);
-					half.c = s1[i-1];
-					that.test.sides[m1][M1].push(half);
-				}
-
-
-				if (that.test.sides[m2][M2].done){
-
-					//var tile = that.test.sides[m1][M1].r?  that.test.sides[m1][M1][it-i] : that.test.sides[m1][M1][i-1]
-					var tile = [stack[stack.length-1][stack[stack.length-1].length-1],cents[cents.length-2],cents[cents.length-1]]
-					//var tile = [];
-					var tmp = that.test.sides[m2][M2];
-					console.log(tmp,i);
-					tmp.r != r2?tile.push(
-						that.test.sides[m2][M2][it-i][0],
-						that.test.sides[m2][M2][it-i][1],
-						that.test.sides[m2][M2][it-i][2]
-					) : tile.push(
-						that.test.sides[m2][M2][i-1][2],
-						that.test.sides[m2][M2][i-1][1],
-						that.test.sides[m2][M2][i-1][0]
-					)
-					tile.c = s2[i-1];
-					//that.test.hex.push(tile);
-					//console.log(that.test.sides[m1][M1]);
-				}
-				else{
-					var half = [stack[stack.length-1][stack[stack.length-1].length-1],cents[cents.length-2],cents[cents.length-1]];
-					half.c = s2[i-1];
-					console.log(half,i);
-					that.test.sides[m2][M2].push(half);
+				half = [stack[stack.length-1][0],cents[1],cents[0]];
+				half.c = s1[i-1];
+				sidesa.push(half);
+				console.log(cents,cents[cents.length-1],i);
+				half = [stack[stack.length-1][stack[stack.length-1].length-1],cents[cents.length-2],cents[cents.length-1]];
+				half.c = s2[i-1];
+				sidesb.push(half);
+			}
+			if (i == it){
+				var k;
+				for (var j = 0,k=0;j<cents.length - 2;j+=2,k++){
+					half = [cents[j],cents[j+1],cents[j+2]];
+					half.c = s3[k];
+					sidesc.push(half);
 				}
 			}
 			if (i!=it){
@@ -412,61 +383,12 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		}
 		//end of loop
 
-		cents = [];
-		cents.push(triangle(b,top[0],s3[0]));
-		for (var i=0;i<s3.length;i++){
-			cents.push(triangle(top[i],top[i+1],s3[i]));
-			if (s3[i+1]){
-				cents.push(triangle(top[i+1],s3[i],s3[i+1]));
-			}
-		}
-		cents.push(triangle(c,top[top.length-1],s3[s3.length-1]));
-
-		if (!that.test.sides[m1][M1].done){
-			var half = [stack[stack.length-1][0],cents[1],cents[0]];
-			half.c = s1[s1.length-1];
-			that.test.sides[m1][M1].push(half);
-		}
-		if (!that.test.sides[m2][M2].done){
-			var half = [stack[stack.length-1][stack[stack.length-1].length-1],cents[cents.length-2],cents[cents.length-1]];
-			half.c = s2[s2.length-1];
-			that.test.sides[m2][M2].push(half);
-		}
-
-		for (var k=1;k<top.length-1;k++){
-			var tile = [stack[i-1][2*k - 2],stack[i-1][2*k - 1],stack[i-1][2*k],cents[2*k+1],cents[2*k],cents[2*k-1]];
-			tile.c = top[k];
-			//that.test.hex.push(tile);
-		}
-		for (var i=0,ind = 0;i<cents.length-2;i+=2,ind++){
-			if (!that.test.sides[m3][M3].done){
-				var half = [cents[i],cents[i+1],cents[i+2]];
-				half.c = s3[~~i/2];
-				that.test.sides[m3][M3].push(half);
-			}
-			else{
-				//var tile = that.test.sides[m1][M1].r?  that.test.sides[m1][M1][it-i] : that.test.sides[m1][M1][i-1]
-				var tile = [cents[i],cents[i+1],cents[i+2]]
-				var tmp = that.test.sides[m3][M3];
-				tmp.r != r3?tile.push(
-					that.test.sides[m3][M3][it-ind-1][0],
-					that.test.sides[m3][M3][it-ind-1][1],
-					that.test.sides[m3][M3][it-ind-1][2]
-				) : tile.push(
-					that.test.sides[m3][M3][ind][2],
-					that.test.sides[m3][M3][ind][1],
-					that.test.sides[m3][M3][ind][0]
-				)
-				tile.c = s3[ind];
-				//that.test.hex.push(tile);
-				//console.log(that.test.sides[m1][M1]);
-			}
-		}
-		that.test.sides[m1][M1].done = that.test.sides[m2][M2].done = that.test.sides[m3][M3].done = true
-		that.test.sides[m1][M1].r = r1;
-		that.test.sides[m2][M2].r = r2;
-		that.test.sides[m3][M3].r = r3;
-
+		sidesa.r = r1;
+		that.test.sides[m1][M1].push(sidesa);
+		sidesb.r = r2;
+		that.test.sides[m2][M2].push(sidesb);
+		sidesc.r = r3;
+		that.test.sides[m3][M3].push(sidesc);
 		stack.push(cents);
 	}
 
@@ -581,6 +503,34 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		if ( ( vector.x === 0 ) && ( vector.z === 0 ) ) uv = new THREE.Vector2( azimuth / 2 / Math.PI + 0.5, uv.y );
 		return uv.clone();
 
+	}
+
+
+
+	function join(){
+		var h1,h2,s1,s2,tile;
+		h1 = that.test.sides;
+		Object.keys(h1).forEach(function(key,index) {
+			Object.keys(h1[key]).forEach(function(key2,index2) {
+				h2 = h1[key][key2];
+		    s1 = h2[0];
+				s2 = h2[1];
+				if (s1.s || s2.s){}
+				else{
+					console.log(s1[0].c.index,s2[0].c.index)
+					if (s1[0].c.index != s2[0].c.index){
+						s2.reverse();
+					}
+					console.log(s1[0].c.index,s2[0].c.index)
+					for (var i=0;i<s1.length;i++){
+						if (s1.r!=s2.r)tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][0],s2[i][1],s2[i][2]];
+						else tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][2],s2[i][1],s2[i][0]]
+						tile.c = s2[i].c;
+						that.test.hex.push(tile);
+					}
+				}
+			});
+		});
 	}
 
 };
