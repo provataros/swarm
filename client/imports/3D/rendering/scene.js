@@ -170,7 +170,6 @@ function showPlanet(planet){
 		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : false} ));
 		tile.faces.push(t);
 	}
-	console.log(tile);
 	//new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
 	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc) );
 	//p.add(meshh);
@@ -195,11 +194,10 @@ function showPlanet(planet){
 
 	}
 	//console.log(tile);
-	//var mat = new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
+	var mat = new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
 	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc)  );
-	console.log(tile);
 	p.add(meshh);
-
+	console.log(tile);
 
   console.log(Date.now()-sss);
 	for (var i =0;i<planet.extra.camps.length;i++){
