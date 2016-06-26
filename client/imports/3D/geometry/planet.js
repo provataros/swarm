@@ -10,38 +10,32 @@ var size = 1024;
 function createPlanet(planet){
 
 
+  var meshes = new THREE.Object3D();
 
-  var sss = Date.now();
-  var geometry   = new THREE.HexasphereGeometry(planet.radius,2);
-  console.log(Date.now()-sss);
-  var verts = geometry.vertices;
-  var faces = geometry.faces;
-  for (var i=0;i<geometry.faces.length;i++){
-  }
+
+  var measure = Date.now();
+  var grid   = new THREE.HexasphereGeometry(planet.radius+1,15);
+  var sphere = new THREE.SphereGeometry(planet.radius,32,32);
+  console.log(Date.now()-measure);
+
   //var geometry   = new THREE.SphereGeometry(planet.radius,32,32);
   THREE.ImageUtils.crossOrigin = '';
-  console.log(planet);
+
   var rnd = new Math.seedrandom(planet.id);
-  var map;
-  console.log(geometry);
+  var map = Texture.full(planet.id,size,size/2,rnd);
 
+  var transparent = new THREE.MeshBasicMaterial( {side : THREE.DoubleSide, transparent: true, opacity: 0 } );
+  //var transparent = new THREE.MeshBasicMaterial( {side : THREE.DoubleSide, wireframe : true , color : new THREE.Color("#f44")} );
+  var globe = new THREE.MeshBasicMaterial({wireframe : false});
+	globe.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
+  globe.map.needsUpdate = true;
 
+  var earthMesh = new THREE.Mesh(sphere, globe);
+  var gridMesh = new THREE.Mesh(grid, transparent);
 
-  map = Texture.full(planet.id,size,size/2,rnd);
-
-
-  var material = new THREE.MeshBasicMaterial();
-  material.wireframe = true;
-  map.color = 0x000000;
-	//material.map = new THREE.DataTexture(map.color,size,size/2,THREE.RGBAFormat);
-
-	//material.map.needsUpdate = true;
-
-  var earthMesh = new THREE.Mesh(geometry, material);
-  //console.log(map.noise);
-  //console.log(map.noise.length,map.noise);
   return {
     planet : earthMesh,
+    grid : gridMesh,
     data : planet,
     extra : {
       camps : function(map){

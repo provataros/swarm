@@ -117,14 +117,8 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 	}
 
 
-	for ( var i = 0, l = this.vertices.length; i < l; i ++ ) {
-		this.vertices[ i ].multiplyScalar( radius );
-	}
-
 	// Merge vertices
-
-	this.mergeVertices();
-  this.computeFaceNormals();
+  //this.computeFaceNormals();
 
 	this.boundingSphere = new THREE.Sphere( new THREE.Vector3(), radius );
 
@@ -255,11 +249,13 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	function triangle(a,b,c){
 		var o = that.test.centers.length;
-		that.test.centers.push({
-			x : (a.x + b.x + c.x)/3,
-			y : (a.y + b.y + c.y)/3,
-			z : (a.z + b.z + c.z)/3
-		});
+		var center = new THREE.Vector3(
+			(a.x + b.x + c.x)/3,
+			(a.y + b.y + c.y)/3,
+			(a.z + b.z + c.z)/3
+		);
+		center.setLength(radius+0.5);
+		that.test.centers.push(center);
 		that.test.triangles.push({
 			a : a.index,
 			b : b.index,
@@ -272,7 +268,6 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 		//split(faces[i],3);
 
-		it = 3;
 		var a = that.test.vertices[face.a];
 		var b = that.test.vertices[face.b];
 		var c = that.test.vertices[face.c];
@@ -354,7 +349,7 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 					for (var k=1;k<top.length-1;k++){
 						var tile = [stack[i-1][2*k - 2],stack[i-1][2*k - 1],stack[i-1][2*k],cents[2*k+1],cents[2*k],cents[2*k-1]];
 						tile.c = top[k];
-						that.test.hex.push(tile);
+						createTile(tile);
 					}
 				}
 			}
@@ -391,100 +386,33 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 		sidesc.r = r3;
 		that.test.sides[m3][M3].push(sidesc);
 		stack.push(cents);
-		that.test.penta[a.index] = {};
-		that.test.penta[a.index].o = stack[0][0]
-		that.test.penta[a.index].b = b.index;
-		that.test.penta[a.index].c = c.index;
-		console.log(that.test.penta);
-		console.log(stack);
-	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	function subdivide( face, detail ) {
-
-		var cols = Math.pow( 2, detail );
-		var a = prepare( that.vertices[ face.a ] );
-		var b = prepare( that.vertices[ face.b ] );
-		var c = prepare( that.vertices[ face.c ] );
-		var v = [];
-
-		// Construct all of the vertices for this subdivision.
-
-		for ( var i = 0 ; i <= cols; i ++ ) {
-
-			v[ i ] = [];
-
-			var aj = prepare( a.clone().lerp( c, i / cols ) );
-			var bj = prepare( b.clone().lerp( c, i / cols ) );
-			var rows = cols - i;
-
-			for ( var j = 0; j <= rows; j ++ ) {
-
-				if ( j === 0 && i === cols ) {
-
-					v[ i ][ j ] = aj;
-
-				} else {
-
-					v[ i ][ j ] = prepare( aj.clone().lerp( bj, j / rows ) );
-
-				}
-
-			}
-
+		if (!that.test.penta[a.index]){
+			that.test.penta[a.index] = {l : [],r : [],c : []};
 		}
-
-		// Construct all of the faces.
-
-		for ( var i = 0; i < cols ; i ++ ) {
-
-			for ( var j = 0; j < 2 * ( cols - i ) - 1; j ++ ) {
-
-				var k = Math.floor( j / 2 );
-
-				if ( j % 2 === 0 ) {
-
-					make(
-						v[ i ][ k + 1 ],
-						v[ i + 1 ][ k ],
-						v[ i ][ k ]
-					);
-
-				} else {
-
-					make(
-						v[ i ][ k + 1 ],
-						v[ i + 1 ][ k + 1 ],
-						v[ i + 1 ][ k ]
-					);
-
-				}
-
-			}
-
+		if (!that.test.penta[b.index]){
+			that.test.penta[b.index] = {l : [],r : [],c : []};
 		}
+		if (!that.test.penta[c.index]){
+			that.test.penta[c.index] = {l : [],r : [],c : []};
+		}
+		that.test.penta[a.index].c.push(stack[0][0]);
+		that.test.penta[a.index].l.push(b.index);
+		that.test.penta[a.index].r.push(c.index);
+
+		that.test.penta[b.index].c.push(cents[0]);
+		that.test.penta[b.index].l.push(c.index);
+		that.test.penta[b.index].r.push(a.index);
+
+		that.test.penta[c.index].c.push(cents[cents.length-1]);
+		that.test.penta[c.index].l.push(a.index);
+		that.test.penta[c.index].r.push(b.index);
+
 
 	}
 
 
-	// Angle around the Y axis, counter-clockwise when looking from above.
 
 	function azimuth( vector ) {
 
@@ -512,7 +440,16 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 
 	}
 
-
+	function createTile(tile){
+		if (!that.tiles)that.tiles = [];
+		var l = that.tiles.length;
+		that.tiles[l] = tile;
+		for (var j=0;j<tile.length-2;j++){
+			var f = new THREE.Face3(tile[0],tile[j+1],tile[j+2]);
+			f.tile = l;
+			that.faces.push(f)
+		}
+	}
 
 	function join(){
 		var h1,h2,s1,s2,tile;
@@ -531,14 +468,38 @@ THREE.HexasphereGeometry = function (radius, detail ) {
 						if (s1.r!=s2.r)tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][0],s2[i][1],s2[i][2]];
 						else tile = [s1[i][0],s1[i][1],s1[i][2],s2[i][2],s2[i][1],s2[i][0]]
 						tile.c = s2[i].c;
-						that.test.hex.push(tile);
+						createTile(tile);
 					}
 				}
 			});
 		});
+
+		h1 = that.test.penta;
+		var l,r,c,i;
+		var tile;
+		Object.keys(h1).forEach(function(key,index) {
+				l = h1[key].l;
+				r = h1[key].r;
+				c = h1[key].c;
+				tile = [c[0]];
+				i=0;
+				i = l.indexOf(r[i]);
+				tile.push(c[i]);
+				i = l.indexOf(r[i]);
+				tile.push(c[i]);
+				i = l.indexOf(r[i]);
+				tile.push(c[i]);
+				i = l.indexOf(r[i]);
+				tile.push(c[i]);
+				//tile.c = that.test.hex[0].c;
+				createTile(tile);
+		});
+		that.vertices =  $.merge([],that.test.centers);
 	}
 
 };
+
+
 
 THREE.HexasphereGeometry.prototype = Object.create( THREE.Geometry.prototype );
 THREE.HexasphereGeometry.prototype.constructor = THREE.HexasphereGeometry;

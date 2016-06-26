@@ -135,81 +135,17 @@ function showPlanet(planet){
 	scene.add( camera );
 
 
-
-//311 278 318742 225 220 207
-// /310 283 317723 38 114 49
 	var p = new THREE.Object3D();
 
+	p.add(planet.planet);
+	p.add(planet.grid);
 
-	//p.add(planet.planet);
-
-	var material = new THREE.LineBasicMaterial({
-  	color: 0xffffff
-  });
-
-	console.log(planet);
-	var vvv = planet.planet.geometry.test.vertices;
-	var ttt = planet.planet.geometry.test.triangles;
-	var sss = Date.now();
-
-
-	var tile = new THREE.Geometry();
-
-	//console.log(ttt);
-
-	var ccc = [];
-
-	for (var i =0;i<planet.planet.geometry.test.triangles.length;i++){
-
-		var t = planet.planet.geometry.test.triangles[i];
-		t = new THREE.Face3(t.a,t.b,t.c);
-		tile.vertices[vvv[t.a].index] = vvv[t.a];
-		tile.vertices[vvv[t.b].index] = vvv[t.b];
-		tile.vertices[vvv[t.c].index] = vvv[t.c];
-		t.materialIndex = ccc.length;
-		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : true} ));
-		tile.faces.push(t);
-	}
-	//new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
-	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc) );
-	//p.add(meshh);
-
-
-	var tile = new THREE.Geometry();
-	tile.vertices = planet.planet.geometry.test.centers;
-	var ccc = [];
-	for (var i =0;i<planet.planet.geometry.test.hex.length;i++){
-
-		var t = planet.planet.geometry.test.hex[i];
-		var c = tile.vertices.length;
-		tile.vertices.push(t.c);
-		for (var j=0;j<t.length-1;j++){
-			var f = new THREE.Face3(c,t[j],t[j+1]);
-			f.materialIndex = ccc.length;
-			tile.faces.push(f)
-		}
-		var f = new THREE.Face3(c,t[t.length-1],t[0])
-		f.materialIndex = ccc.length;
-		tile.faces.push(f)
-		ccc.push(new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide ,wireframe : true} ));
-
-	}
-	//console.log(tile);
-	var mat = new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} )
-	var meshh = new THREE.Mesh(tile , new THREE.MultiMaterial(ccc)  );
-	p.add(meshh);
-	console.log(tile);
-
-  console.log(Date.now()-sss);
-	for (var i =0;i<planet.extra.camps.length;i++){
-		/*var camp = new THREE.Mesh( new THREE.SphereGeometry(2,8,8), new THREE.MeshNormalMaterial() );
-	  camp.position.copy(planet.extra.camps[i]);
-		p.add(camp);*/
-	}
-
-
-
-
+	var highlight = new THREE.Geometry();
+	highlight.vertices = [new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0)]
+	highlight.faces = [new THREE.Face3(0,1,2),new THREE.Face3(0,2,3),new THREE.Face3(0,3,4),new THREE.Face3(0,4,5)];
+	highlight.dynamic = true;
+	var mesh = new THREE.Mesh(highlight, new THREE.MeshBasicMaterial( { color: new THREE.Color( Math.random(), Math.random(), Math.random() ) ,side : THREE.DoubleSide, wireframe : false} ));
+	p.add(mesh);
 
 	p.orbit = {x:0,y:(Math.random() * (0.001 - 0.01) + 0.01),z:  (Math.random() * (0.001 - 0.01) + 0.01)  };
 	scene.add(p);
@@ -225,14 +161,62 @@ function showPlanet(planet){
   var test = new THREE.Vector3(1,1,1);
 	var size = 1024;
 
+
+
+	function highlightTile(face){
+		var v = face.object.geometry.vertices;
+		var f = face.object.geometry.faces;
+		var t = face.face.tile;
+		var ts =  face.object.geometry.tiles;
+		highlight.vertices[0].x = v[ts[t][0]].x
+		highlight.vertices[0].y = v[ts[t][0]].y
+		highlight.vertices[0].z = v[ts[t][0]].z
+
+		highlight.vertices[1].x = v[ts[t][1]].x
+		highlight.vertices[1].y = v[ts[t][1]].y
+		highlight.vertices[1].z = v[ts[t][1]].z
+
+		highlight.vertices[2].x = v[ts[t][2]].x
+		highlight.vertices[2].y = v[ts[t][2]].y
+		highlight.vertices[2].z = v[ts[t][2]].z
+
+		highlight.vertices[3].x = v[ts[t][3]].x
+		highlight.vertices[3].y = v[ts[t][3]].y
+		highlight.vertices[3].z = v[ts[t][3]].z
+
+		highlight.vertices[4].x = v[ts[t][4]].x
+		highlight.vertices[4].y = v[ts[t][4]].y
+		highlight.vertices[4].z = v[ts[t][4]].z
+
+		if (ts[t].length == 6){
+			highlight.vertices[5].x = v[ts[t][5]].x
+			highlight.vertices[5].y = v[ts[t][5]].y
+			highlight.vertices[5].z = v[ts[t][5]].z
+		}
+		else{
+			highlight.vertices[5].x = v[ts[t][4]].x
+			highlight.vertices[5].y = v[ts[t][4]].y
+			highlight.vertices[5].z = v[ts[t][4]].z
+		}
+
+		highlight.verticesNeedUpdate = true;
+	}
+
+
+	var last = 0;
+
+
 	$("#renderer").on("mousemove",function(e){
-		return;
+		last = Date.now();
 		mouse.x = ( e.offsetX / $(this).width() ) * 2 - 1;
 		mouse.y = - ( e.offsetY / $(this).height() ) * 2 + 1;
 		mouse.z = 1;
 		raycaster.setFromCamera( mouse, camera );
-		var intersects = raycaster.intersectObject( planet.planet , true );
+		var intersects = raycaster.intersectObject( planet.grid , true );
 		if (intersects.length > 0){
+			//console.log(intersects[0])
+			highlightTile(intersects[0]);
+			return;
 			var x = Math.round(intersects[0].uv.x * size);
 			var y = Math.round(intersects[0].uv.y * size/2);
 
@@ -262,6 +246,8 @@ function showPlanet(planet){
 
 	updateRender(scene,camera,[p]);
 }
+
+
 
 export const Scene = {
 	showPlanet : showPlanet,
