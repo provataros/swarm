@@ -5,7 +5,7 @@ import {Random} from "/imports/random";
 var THREE = Three;
 
 
-var size = 1024;
+var size = 512;
 
 function createPlanet(planet){
 

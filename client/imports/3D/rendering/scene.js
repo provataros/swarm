@@ -1,5 +1,5 @@
 import {Three} from "/client/imports/three";
-
+import {Texture} from "/client/imports/texture";
 
 
 
@@ -133,7 +133,7 @@ function showPlanet(planet){
 	var camera = createCamera();
 	//console.log(planet);
 	scene.add( camera );
-
+	console.log(planet);
 
 	var p = new THREE.Object3D();
 
@@ -155,6 +155,16 @@ function showPlanet(planet){
 	//scene.add( directionalLight );
 	light = new THREE.AmbientLight( 0xffffff, 1, 0 );
 	scene.add( light );
+
+	var material = new THREE.MeshBasicMaterial({color : new THREE.Color("#fff")});
+	geometry = new THREE.Geometry();
+  geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+  geometry.vertices.push(new THREE.Vector3(1200, 1200, 1200));
+  geometry.dynamic = true;
+	var line = new THREE.Line(geometry, material);
+
+  p.add(line);
+
 
   var raycaster = new THREE.Raycaster(); // create once
   var mouse = new THREE.Vector3(); // create once
@@ -206,21 +216,22 @@ function showPlanet(planet){
 	var last = 0;
 
 
-	$("#renderer").on("mousemove",function(e){
+	$("#renderer").on("click",function(e){
 		last = Date.now();
 		mouse.x = ( e.offsetX / $(this).width() ) * 2 - 1;
 		mouse.y = - ( e.offsetY / $(this).height() ) * 2 + 1;
 		mouse.z = 1;
 		raycaster.setFromCamera( mouse, camera );
-		var intersects = raycaster.intersectObject( planet.grid , true );
+		var intersects = raycaster.intersectObject( planet.planet , true );
 		if (intersects.length > 0){
 			//console.log(intersects[0])
-			highlightTile(intersects[0]);
-			return;
+
 			var x = Math.round(intersects[0].uv.x * size);
 			var y = Math.round(intersects[0].uv.y * size/2);
+			Texture.part(size,size/2,new Math.seedrandom(planet.data.id),intersects[0].point.x,intersects[0].point.y,intersects[0].point.z);
+			//highlightTile(intersects[0]);
 
-			console.log(x,y,intersects[0].point,(y * (size) + x));
+			console.log(x,y,intersects[0].point);
 
 			var r = intersects[0].object.material.map.image.data[(y * (size) + x)*4];
 			var g = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 1];
@@ -230,7 +241,6 @@ function showPlanet(planet){
 			test.y = intersects[0].point.y;
 			test.z = intersects[0].point.z;
 
-			return;
 
 			intersects[0].object.parent.worldToLocal(test);
 			line.geometry.vertices[1] = test.multiplyScalar(1.5);

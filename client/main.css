@@ -29,7 +29,8 @@ body{
 #map{
   position : relative;
   bottom : 0px;
-  display : none;
+  width : 400px;
+  height : 200px;
 }
 
 #renderer{
