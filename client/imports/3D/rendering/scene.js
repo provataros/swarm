@@ -169,7 +169,7 @@ function showPlanet(planet){
   var raycaster = new THREE.Raycaster(); // create once
   var mouse = new THREE.Vector3(); // create once
   var test = new THREE.Vector3(1,1,1);
-	var size = 1024;
+	var size = planet.size;
 
 
 
@@ -228,10 +228,9 @@ function showPlanet(planet){
 
 			var x = Math.round(intersects[0].uv.x * size);
 			var y = Math.round(intersects[0].uv.y * size/2);
-			Texture.part(size,size/2,new Math.seedrandom(planet.data.id),intersects[0].point.x,intersects[0].point.y,intersects[0].point.z);
-			//highlightTile(intersects[0]);
+			console.log(intersects[0].point)
+			Texture.part(size,size/2,new Math.seedrandom(planet.data.id),intersects[0].point.x,intersects[0].point.y,intersects[0].point.z,x,y);
 
-			console.log(x,y,intersects[0].point);
 
 			var r = intersects[0].object.material.map.image.data[(y * (size) + x)*4];
 			var g = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 1];

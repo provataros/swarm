@@ -37,6 +37,7 @@ function createPlanet(planet){
     planet : earthMesh,
     grid : gridMesh,
     data : planet,
+    size : size,
     extra : {
       camps : function(map){
         var a = [];

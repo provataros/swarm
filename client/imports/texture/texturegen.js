@@ -20,8 +20,10 @@ import {Three} from "/client/imports/three"
 
 var canvasexists = false;
 
+
+  var size = 2048;
+
 function displayCurrentTexture(map){
-  var size = 512;
   var  canvas;
   if (canvasexists)canvas = document.getElementById("testcanvas");
   else canvas = document.createElement('canvas');
@@ -141,8 +143,9 @@ function generateTextureGrayScale(w,h,map){
 }
 
 function rescaleMap(map,min,max){
+  return map;
   for (var i =0;i<map.length;i++){
-    map[i] = ~~(((map[i] - min) * (255 - 0)) / (max - min)) + 0;
+    map[i] = (((map[i] - min) * (255 - 0)) / (max - min)) + 0;
   }
   return map;
 }
@@ -254,7 +257,10 @@ function generateTextureFull(id,noiseWidth,noiseHeight,rnd,temp){
 
 }
 
-function generatePartMap(noiseWidth,noiseHeight,rnd,x,y,z){
+var inc = 1;
+
+function generatePartMap(noiseWidth,noiseHeight,rnd,x,y,z,xx,yy){
+  size = noiseWidth;
 	var w = noiseWidth;
 	var h = noiseHeight;
   console.log(w,h);
@@ -263,45 +269,52 @@ function generatePartMap(noiseWidth,noiseHeight,rnd,x,y,z){
 
 	var simplex = new Noise.simplex(rnd);
 
-	var radius = 100;
+	var radius = 85;
 	var c = 0;
 
 	var DEG_TO_RAD = 0.0174533;
-  if (temp){
-    var per = temp.p;
-    var sc = temp.s
-  }
-  else{
-    var per = 0.5;
-    var sc = 0.006;
-  }
 
+  var per = 0.5;
+  var sc = 0.006;
 
+  var axis = new Three.Vector3( 1, 1, 1);
+  var point = new Three.Vector3(x,y,z);
+  var ax = new Three.Vector3( 1, 0, 0);
+  var ay = new Three.Vector3( 0, 1, 0);
+  var az = new Three.Vector3( 0, 0, 1);
+  var norm = point.clone().setLength(1);
+  var angle = 0;
   var min = 999999;
   var max = -999999;
-
-	for (var j=start;j<h;j++){
-    var phi = ((Math.PI/h) * (j));
-		for (var i=end;i<w;i++){
-			var theta = ((2 * Math.PI)/w) * (i);
-			var x = Math.cos(theta) * Math.sin(phi) * radius;
-			var y = Math.sin(theta) * Math.sin(phi) * radius;
-			var z = -Math.cos(phi) * radius;
-
-			var n = sumOctave(7, x,y,z, per, sc, 0,255,simplex,3);
-      if (n<min)min = n;
-      if (n>max)max = n;
-			noiseMap[c] = n;
-			c++;
-		}
+  var euler;
+  console.log(xx,yy)
+  var anglex = ((xx-256)*(Math.PI))/256;
+  var angley = ((yy-128)*(Math.PI))/128;
+  console.log(angley)
+	for (var i=0;i<h*w;i++){
+    var u = (i)%w;
+    var v = Math.floor((i)/w);
+    var phi = ((Math.PI/h)* (v));
+    var theta = ((2 * Math.PI)/w) * (u);
+    var x = Math.cos(theta) * Math.sin(phi) * radius;
+    var y = Math.sin(theta) * Math.sin(phi) * radius;
+    var z = -Math.cos(phi) * radius;
+    var vec = new Three.Vector3(x,y,z);
+    vec.applyAxisAngle(aa, 0.2*inc);
+    var n = sumOctave(6, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
+    if (n<min)min = n;
+    if (n>max)max = n;
+    noiseMap[i] = n;
 	}
   var n = rescaleMap(noiseMap,min,max);
-  displayCurrentTexture(generateTextureColor(w,h,noiseMap));
   //console.log(n);
+  displayCurrentTexture(generateTextureColor(w,h,noiseMap));
+  inc += 1;
 	return noiseMap;
 }
 
 function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp,start=0,end=0){
+  size = noiseWidth;
 	var w = noiseWidth;
 	var h = noiseHeight;
   console.log(w,h);
@@ -310,7 +323,7 @@ function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp,start=0,end=0){
 
 	var simplex = new Noise.simplex(rnd);
 
-	var radius = 100;
+	var radius = 85;
 	var c = 0;
 
 	var DEG_TO_RAD = 0.0174533;
@@ -327,15 +340,15 @@ function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp,start=0,end=0){
   var min = 999999;
   var max = -999999;
 
-	for (var j=start;j<h;j++){
+	for (var j=0;j<h;j++){
     var phi = ((Math.PI/h) * (j));
-		for (var i=end;i<w;i++){
+		for (var i=0;i<w;i++){
 			var theta = ((2 * Math.PI)/w) * (i);
 			var x = Math.cos(theta) * Math.sin(phi) * radius;
 			var y = Math.sin(theta) * Math.sin(phi) * radius;
 			var z = -Math.cos(phi) * radius;
 
-			var n = sumOctave(7, x,y,z, per, sc, 0,255,simplex,3);
+			var n = sumOctave(6, x,y,z, per, sc, 0,255,simplex,3);
       if (n<min)min = n;
       if (n>max)max = n;
 			noiseMap[c] = n;
