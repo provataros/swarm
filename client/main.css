@@ -38,6 +38,10 @@ body{
   height : 100% !important;
 
 }
+#testcanvas{
+  width : 512px;
+  height : 256px;
+}
 .container{
   margin : 10px;
   display : block;

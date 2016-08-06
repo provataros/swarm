@@ -237,7 +237,7 @@ function sumOctave(num_iterations, x, y,z, persistence, scale, low, high,simplex
   return noise;
 }
 
-function generateTextureFull(id,noiseWidth,noiseHeight,rnd,temp){
+function generateTextureFull(id,noiseWidth,noiseHeight,rnd,incx,incy){
   var nm = decodeMap(id,"texture",Uint8Array);
   var cm = null;
   if (nm){
@@ -247,7 +247,7 @@ function generateTextureFull(id,noiseWidth,noiseHeight,rnd,temp){
     return {noise : nm,color:cm };
   }
   else{
-    nm = generateNoiseMap(noiseWidth,noiseHeight,rnd,temp);
+    nm = generateNoiseMap(noiseWidth,noiseHeight,rnd,incx,incy);
     cm = generateTextureColor(noiseWidth,noiseHeight,nm);
   }
   displayCurrentTexture(cm);
@@ -257,9 +257,8 @@ function generateTextureFull(id,noiseWidth,noiseHeight,rnd,temp){
 
 }
 
-var inc = 1;
 
-function generatePartMap(noiseWidth,noiseHeight,rnd,x,y,z,xx,yy){
+function generatePartMap(noiseWidth,noiseHeight,rnd,_x,_y,inc=0){
   size = noiseWidth;
 	var w = noiseWidth;
 	var h = noiseHeight;
@@ -287,34 +286,73 @@ function generatePartMap(noiseWidth,noiseHeight,rnd,x,y,z,xx,yy){
   var min = 999999;
   var max = -999999;
   var euler;
-  console.log(xx,yy)
-  var anglex = ((xx-256)*(Math.PI))/256;
-  var angley = ((yy-128)*(Math.PI))/128;
+  //console.log(xx,yy)
+  var anglez = ((_x-(w/2))*(Math.PI))/(w/2);
+  var angley = ((_y-(h/2))*(Math.PI))/(h/2);
+  var anglex = angley;
+  //console.log(angley)
+  //inc = 0;
+  //angley = 0;
+
+  
+
+/*
+  var ratioy = Math.PI*Math.cos(((512-_x)/512)*2*Math.PI);
+  var ratiox = Math.PI*Math.sin(((512-_x)/512)*2*Math.PI);
+
+  angley *= ratioy;
+  anglex *= ratiox;
+  console.log(ratiox,ratioy,anglex,angley,anglez)
+  */
+
   console.log(angley)
-	for (var i=0;i<h*w;i++){
+  console.log(inc)
+
+	for (var _i=0;_i<h*w;_i++){
+    //if (i>=(w*h/2+256)-1 && i<=(w*h/2+256)+1)continue
+    var i = _i;
+    if (_i%w == w/2)continue
+    if (_i>= ((w*h/2)) && _i<=((w*h/2) +w))continue
     var u = (i)%w;
     var v = Math.floor((i)/w);
     var phi = ((Math.PI/h)* (v));
     var theta = ((2 * Math.PI)/w) * (u);
-    var x = Math.cos(theta) * Math.sin(phi) * radius;
-    var y = Math.sin(theta) * Math.sin(phi) * radius;
-    var z = -Math.cos(phi) * radius;
+    var x = Math.cos(theta) * Math.sin(phi);
+    var y = Math.sin(theta) * Math.sin(phi);
+    var z = Math.cos(phi);
     var vec = new Three.Vector3(x,y,z);
-    vec.applyAxisAngle(aa, 0.2*inc);
-    var n = sumOctave(6, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
+    vec.setLength(radius)
+    
+
+    vec.applyAxisAngle(ay, -inc*0.1);
+    
+    //vec.applyAxisAngle(ax, 0.1*inc);
+/*
+    vec.applyAxisAngle(az, anglez);
+    vec.applyAxisAngle(ay, angley);
+    vec.applyAxisAngle(ax, anglex);
+
+    
+*/
+    var n = sumOctave(5, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
     if (n<min)min = n;
     if (n>max)max = n;
-    noiseMap[i] = n;
+    noiseMap[_i] = n;
 	}
   var n = rescaleMap(noiseMap,min,max);
   //console.log(n);
   displayCurrentTexture(generateTextureColor(w,h,noiseMap));
-  inc += 1;
 	return noiseMap;
 }
 
-function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp,start=0,end=0){
-  size = noiseWidth;
+function generateNoiseMap(noiseWidth,noiseHeight,rnd,incx=0,incy=0){
+
+
+
+
+
+  
+   size = noiseWidth;
 	var w = noiseWidth;
 	var h = noiseHeight;
   console.log(w,h);
@@ -327,36 +365,50 @@ function generateNoiseMap(noiseWidth,noiseHeight,rnd,temp,start=0,end=0){
 	var c = 0;
 
 	var DEG_TO_RAD = 0.0174533;
-  if (temp){
-    var per = temp.p;
-    var sc = temp.s
-  }
-  else{
-    var per = 0.5;
-    var sc = 0.006;
-  }
 
+  var per = 0.5;
+  var sc = 0.006;
 
+  var axis = new Three.Vector3( 1, 1, 1);
+  var point = new Three.Vector3(x,y,z);
+  var ax = new Three.Vector3( 1, 0, 0);
+  var ay = new Three.Vector3( 0, 1, 0);
+  var az = new Three.Vector3( 0, 0, 1);
+  var norm = point.clone().setLength(1);
+  var angle = 0;
   var min = 999999;
   var max = -999999;
+  var euler;
+  //console.log(xx,yy)
+  var anglex = ((333-256)*(Math.PI))/256;
+  var angley = ((166-256)*(Math.PI))/256;
+  //console.log(angley)
+  var inc = 166 - w/2;
 
-	for (var j=0;j<h;j++){
-    var phi = ((Math.PI/h) * (j));
-		for (var i=0;i<w;i++){
-			var theta = ((2 * Math.PI)/w) * (i);
-			var x = Math.cos(theta) * Math.sin(phi) * radius;
-			var y = Math.sin(theta) * Math.sin(phi) * radius;
-			var z = -Math.cos(phi) * radius;
+  inc = 0;
 
-			var n = sumOctave(6, x,y,z, per, sc, 0,255,simplex,3);
-      if (n<min)min = n;
-      if (n>max)max = n;
-			noiseMap[c] = n;
-			c++;
-		}
+  var vec;
+	for (var i=0;i<h*w;i++){
+    if (i>=(w*h/2+256)-1 && i<=(w*h/2+256)+1)continue
+    var u = (i)%w;
+    var v = Math.floor((i)/w);
+    var phi = ((Math.PI/h)* (v));
+    var theta = ((2 * Math.PI)/w) * (u);
+    var x = Math.cos(theta) * Math.sin(phi) * radius;
+    var y = Math.sin(theta) * Math.sin(phi) * radius;
+    var z = -Math.cos(phi) * radius;
+    vec = new Three.Vector3(x,y,z);
+    //vec.applyAxisAngle(az, anglex);
+    
+    var n = sumOctave(7, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
+    if (n<min)min = n;
+    if (n>max)max = n;
+    noiseMap[i] = n;
 	}
+  console.log(vec);
   var n = rescaleMap(noiseMap,min,max);
   //console.log(n);
+  displayCurrentTexture(generateTextureColor(w,h,noiseMap));
 	return noiseMap;
 }
 
