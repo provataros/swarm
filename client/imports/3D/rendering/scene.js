@@ -230,8 +230,8 @@ function showPlanet(planet){
 			var y = Math.round(intersects[0].uv.y * size/2);
 
 
-			Texture.part(size,size/2,new Math.seedrandom(planet.data.id),x,y);
-			console.log(x,y);
+			Texture.part(size,size/2,new Math.seedrandom(planet.data.id),x,y,intersects[0].point);
+			console.log(intersects[0].point,x,y);
 
 			var r = intersects[0].object.material.map.image.data[(y * (size) + x)*4];
 			var g = intersects[0].object.material.map.image.data[(y * (size) + x)*4+ 1];

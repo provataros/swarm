@@ -24,17 +24,6 @@ function createPlanet(planet){
   var rnd = new Math.seedrandom(planet.id);
   var map = Texture.full(planet.id,size,size/2,rnd);
   var inc = 0;
-  $(document).on("keydown",function(e){
-    e.preventDefault();
-    
-    if (e.which==38)inc --;   
-    if (e.which==40)inc ++;
-
-    Texture.part(size,size/2,new Math.seedrandom(planet.id),300,128,inc);
-
-
-  })
-
   var transparent = new THREE.MeshBasicMaterial( {side : THREE.DoubleSide, transparent: true, opacity: 0 } );
   //var transparent = new THREE.MeshBasicMaterial( {side : THREE.DoubleSide, wireframe : true , color : new THREE.Color("#f44")} );
   var globe = new THREE.MeshBasicMaterial({wireframe : false});

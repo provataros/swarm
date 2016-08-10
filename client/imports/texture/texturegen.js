@@ -257,8 +257,18 @@ function generateTextureFull(id,noiseWidth,noiseHeight,rnd,incx,incy){
 
 }
 
+var inc = 1;
+var xxx;
 
-function generatePartMap(noiseWidth,noiseHeight,rnd,_x,_y,inc=0){
+$(document).on("keydown",function(e){
+    e.preventDefault();
+    
+    if (e.which==38)inc --;   
+    if (e.which==40)inc ++;
+  })
+
+
+function generatePartMap(noiseWidth,noiseHeight,rnd,_x,_y,point){
   size = noiseWidth;
 	var w = noiseWidth;
 	var h = noiseHeight;
@@ -276,19 +286,15 @@ function generatePartMap(noiseWidth,noiseHeight,rnd,_x,_y,inc=0){
   var per = 0.5;
   var sc = 0.006;
 
-  var axis = new Three.Vector3( 1, 1, 1);
-  var point = new Three.Vector3(x,y,z);
   var ax = new Three.Vector3( 1, 0, 0);
   var ay = new Three.Vector3( 0, 1, 0);
   var az = new Three.Vector3( 0, 0, 1);
-  var norm = point.clone().setLength(1);
-  var angle = 0;
+  
   var min = 999999;
   var max = -999999;
-  var euler;
   //console.log(xx,yy)
   var anglez = ((_x-(w/2))*(Math.PI))/(w/2);
-  var angley = ((_y-(h/2))*(Math.PI))/(h/2);
+  var angley = ((h/2)-_y)/(w/2)
   var anglex = angley;
   //console.log(angley)
   //inc = 0;
@@ -296,48 +302,28 @@ function generatePartMap(noiseWidth,noiseHeight,rnd,_x,_y,inc=0){
 
   
 
-/*
+
   var ratioy = Math.PI*Math.cos(((512-_x)/512)*2*Math.PI);
   var ratiox = Math.PI*Math.sin(((512-_x)/512)*2*Math.PI);
 
   angley *= ratioy;
   anglex *= ratiox;
   console.log(ratiox,ratioy,anglex,angley,anglez)
-  */
+  var _i = 0;
+	for (var _h=0;_h<h;_h++){
+   for (var _w = 0;_w<w;_w++){    
+      //if (_i%w == w/2)continue
+      //if (_i>= ((w*h/2)) && _i<=((w*h/2) +w))continue
 
-  console.log(angley)
-  console.log(inc)
+      var vec = point.clone().applyAxisAngle(ax, Math.PI* ((h-_h)/h)).applyAxisAngle(az, Math.PI* ((w-_w)/w));
+      //vec.applyAxisAngle(ax, 0.1*inc);
 
-	for (var _i=0;_i<h*w;_i++){
-    //if (i>=(w*h/2+256)-1 && i<=(w*h/2+256)+1)continue
-    var i = _i;
-    if (_i%w == w/2)continue
-    if (_i>= ((w*h/2)) && _i<=((w*h/2) +w))continue
-    var u = (i)%w;
-    var v = Math.floor((i)/w);
-    var phi = ((Math.PI/h)* (v));
-    var theta = ((2 * Math.PI)/w) * (u);
-    var x = Math.cos(theta) * Math.sin(phi);
-    var y = Math.sin(theta) * Math.sin(phi);
-    var z = Math.cos(phi);
-    var vec = new Three.Vector3(x,y,z);
-    vec.setLength(radius)
-    
-
-    vec.applyAxisAngle(ay, -inc*0.1);
-    
-    //vec.applyAxisAngle(ax, 0.1*inc);
-/*
-    vec.applyAxisAngle(az, anglez);
-    vec.applyAxisAngle(ay, angley);
-    vec.applyAxisAngle(ax, anglex);
-
-    
-*/
-    var n = sumOctave(5, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
-    if (n<min)min = n;
-    if (n>max)max = n;
-    noiseMap[_i] = n;
+      var n = sumOctave(5, vec.x,vec.y,vec.z, per, sc, 0,255,simplex,3);
+      if (n<min)min = n;
+      if (n>max)max = n;
+      noiseMap[_i] = n;
+      _i++;
+    }
 	}
   var n = rescaleMap(noiseMap,min,max);
   //console.log(n);
